@@ -1,0 +1,29 @@
+Scribbl/
+│
+├── index.html                  # The main entry point and app interface
+│
+├── /static/                    # All static frontend resources
+│   ├── /css/
+│   │   ├── style.css           # Core styling for layout and components
+│   │   └── theme.css           # Optional theme variations (light/dark)
+│   │
+│   ├── /js/
+│   │   ├── main.js             # Core application logic (create, edit, delete notes)
+│   │   ├── ui.js               # Manages UI updates and user interactions
+│   │   ├── progress.js         # Handles progress tracking and visual analytics
+│   │   └── utils.js            # Reusable helper functions (tagging, search, etc.)
+│   │
+│   ├── /images/
+│   │   ├── icons/              # Interface icons and button visuals
+│   │   └── logo.png            # Scribbl application logo
+│   │
+│   └── /fonts/                 # Custom or web-embedded fonts
+│
+├── /templates/                 # Reusable HTML components
+│   ├── note_card.html          # Template for displaying a single note
+│   ├── history_modal.html      # Layout for progress tracking and version history
+│   └── settings_panel.html     # User settings such as themes and preferences
+│
+├── /assets/                    # Additional media like backgrounds or illustrations
+│
+└── README.md                   # Documentation, setup guide, and project overview
