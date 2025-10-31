@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scribbl</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #eef3ff;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --muted: #6b7280;
+      --accent: #6c63ff;
+      --accent-2: #4dd6bf;
+      --radius: 14px;
+      --shadow: 0 8px 28px rgba(20, 24, 60, 0.06);
+      --text: #0b1220;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0e0f19;
+      --card-bg: rgba(28, 29, 45, 0.9);
+      --muted: #a4a6b3;
+      --accent: #7c6cff;
+      --accent-2: #00d9a6;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      --text: #f3f4f6;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.4s ease, color 0.4s ease;
+      padding: 30px;
+    }
+
+    h3 {
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .form-control {
+      max-width: 300px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .theme-toggle {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      color: white;
+      border-radius: 50px;
+      padding: 8px 18px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .note-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      max-width: 420px;
+      margin: 1rem auto;
+      position: relative;
+    }
+
+    .note-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 40px rgba(25, 30, 60, 0.25);
+    }
+
+    .note-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .note-content {
+      margin-top: 0.5rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .note-tags {
+      margin-top: 0.8rem;
+    }
+
+    .note-tags .badge {
+      margin-right: 5px;
+      font-weight: 500;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      border: none;
+    }
+
+    .note-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.9rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .note-actions i {
+      font-size: 1rem;
+      cursor: pointer;
+      margin-left: 10px;
+      color: var(--accent);
+      transition: 0.3s;
+    }
+
+    .note-actions i:hover {
+      transform: scale(1.2);
+      color: var(--accent-2);
+    }
+
+    /* Modal */
+    .modal-content {
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: var(--card-bg);
+      color: var(--text);
+      transition: 0.3s ease;
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      color: white;
+      transition: 0.3s;
+    }
+
+    .btn-save:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .fade {
+      transition: opacity 0.3s ease-in-out;
+    }
+  </style>
+</head>
+
+<body data-theme="light">
+  <div class="container">
+    <h3>🪶Scribbl - Note Cards</h3>
+
+    <!-- Search + Theme Toggle -->
+    <div class="top-bar">
+      <input id="searchBox" type="text" class="form-control shadow-sm" placeholder="🔍 Search notes...">
+      <button id="themeToggle" class="theme-toggle">
+        <i class="bi bi-moon-fill"></i> Theme
+      </button>
+    </div>
+
+    <div id="noteGrid" class="row justify-content-center"></div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Note</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input id="editTitle" type="text" class="form-control mb-2" placeholder="Title">
+          <textarea id="editContent" rows="4" class="form-control mb-2" placeholder="Write your note..."></textarea>
+          <input id="editTags" type="text" class="form-control" placeholder="Comma separated tags (e.g. Work, Ideas)">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button id="saveEditBtn" class="btn btn-save">💾 Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const notes = [
+      {
+        id: 1,
+        title: "Meeting Notes",
+        content: "Discussed upcoming project updates, team responsibilities, and design changes.",
+        tags: ["Work", "Team"],
+        lastUpdated: "Oct 31, 2025"
+      },
+      {
+        id: 2,
+        title: "Grocery List",
+        content: "Milk, Eggs, Bread, Spinach, Tomatoes, and Olive Oil.",
+        tags: ["Personal", "Shopping"],
+        lastUpdated: "Oct 30, 2025"
+      }
+    ];
+
+    const noteGrid = document.getElementById("noteGrid");
+    const editModal = new bootstrap.Modal(document.getElementById("editModal"));
+    let currentNoteId = null;
+
+   function renderNotes(searchTerm = "") {
+  noteGrid.innerHTML = "";
+  const filteredNotes = notes.filter(note =>
+    note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    note.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    note.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  filteredNotes.forEach(note => {
+    const card = document.createElement("div");
+    card.className = "col-md-4";
+    card.innerHTML = `
+      <div class="note-card" data-id="${note.id}">
+        <div class="note-title">${note.title}</div>
+        <div class="note-content">${note.content}</div>
+        <div class="note-tags">
+          ${note.tags.map(tag => `<span class="badge">${tag}</span>`).join("")}
+        </div>
+        <div class="note-footer">
+          <span>Last updated: ${note.lastUpdated}</span>
+          <div class="note-actions">
+            <i class="bi bi-pencil-square" title="Edit" onclick="openEditModal(${note.id})"></i>
+            <i class="bi bi-trash" title="Delete" onclick="deleteNote(${note.id})"></i>
+            <i class="bi bi-clock-history" title="History"></i>
+          </div>
+        </div>
+      </div>
+    `;
+    noteGrid.appendChild(card);
+  });
+}
+
+searchBox.addEventListener("input", (e) => renderNotes(e.target.value));
+
+    function openEditModal(id) {
+      const note = notes.find(n => n.id === id);
+      if (!note) return;
+      currentNoteId = id;
+      document.getElementById("editTitle").value = note.title;
+      document.getElementById("editContent").value = note.content;
+      document.getElementById("editTags").value = note.tags.join(", ");
+      editModal.show();
+    }
+
+    document.getElementById("saveEditBtn").addEventListener("click", () => {
+      const note = notes.find(n => n.id === currentNoteId);
+      if (!note) return;
+      note.title = document.getElementById("editTitle").value.trim();
+      note.content = document.getElementById("editContent").value.trim();
+      note.tags = document.getElementById("editTags").value.split(",").map(t => t.trim()).filter(Boolean);
+      note.lastUpdated = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+      editModal.hide();
+      renderNotes();
+    });
+
+    function deleteNote(id) {
+      const index = notes.findIndex(n => n.id === id);
+      if (index !== -1) {
+        notes.splice(index, 1);
+        renderNotes();
+      }
+    }
+
+    renderNotes();
+   // Search functionality
+    searchBox.addEventListener("input", (e) => renderNotes(e.target.value));
+
+    // Modal Edit
+    function openEditModal(id) {
+      const note = notes.find(n => n.id === id);
+      if (!note) return;
+      currentNoteId = id;
+      document.getElementById("editTitle").value = note.title;
+      document.getElementById("editContent").value = note.content;
+      document.getElementById("editTags").value = note.tags.join(", ");
+      editModal.show();
+    }
+
+    document.getElementById("saveEditBtn").addEventListener("click", () => {
+      const note = notes.find(n => n.id === currentNoteId);
+      if (!note) return;
+      note.title = document.getElementById("editTitle").value.trim();
+      note.content = document.getElementById("editContent").value.trim();
+      note.tags = document.getElementById("editTags").value.split(",").map(t => t.trim()).filter(Boolean);
+      note.lastUpdated = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+      editModal.hide();
+      renderNotes(searchBox.value);
+    });
+
+    function deleteNote(id) {
+      const index = notes.findIndex(n => n.id === id);
+      if (index !== -1) {
+        notes.splice(index, 1);
+        renderNotes(searchBox.value);
+      }
+    }
+
+    // Theme Toggle
+    themeToggle.addEventListener("click", () => {
+      const body = document.body;
+      const isDark = body.getAttribute("data-theme") === "dark";
+      body.setAttribute("data-theme", isDark ? "light" : "dark");
+      themeToggle.innerHTML = isDark
+        ? `<i class="bi bi-moon-fill"></i> Theme`
+        : `<i class="bi bi-sun-fill"></i> Theme`;
+    });
+
+    renderNotes();
+  </script>
+</body>
+</html>
