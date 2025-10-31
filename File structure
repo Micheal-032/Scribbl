@@ -1,29 +1,44 @@
 Scribbl/
 │
-├── index.html                  # The main entry point and app interface
+├── index.html
+│   # Landing page for login/signup
 │
-├── /static/                    # All static frontend resources
+├── dashboard.html
+│   # Main note dashboard after login
+│
+├── /static/
 │   ├── /css/
-│   │   ├── style.css           # Core styling for layout and components
-│   │   └── theme.css           # Optional theme variations (light/dark)
+│   │   ├── style.css         # General styling
+│   │   ├── theme.css         # Theme handling
+│   │   ├── auth.css          # Login/Signup design
+│   │   └── secure.css        # Pattern lock & secure note styles
 │   │
 │   ├── /js/
-│   │   ├── main.js             # Core application logic (create, edit, delete notes)
-│   │   ├── ui.js               # Manages UI updates and user interactions
-│   │   ├── progress.js         # Handles progress tracking and visual analytics
-│   │   └── utils.js            # Reusable helper functions (tagging, search, etc.)
+│   │   ├── auth.js           # Handles user authentication and validation
+│   │   ├── main.js           # Core note management
+│   │   ├── ui.js             # Renders UI and modals
+│   │   ├── progress.js       # Progress tracking and analytics
+│   │   ├── secure.js         # Handles secure notes, password/pattern validation
+│   │   └── utils.js          # Helper functions (tags, localStorage, session)
 │   │
 │   ├── /images/
-│   │   ├── icons/              # Interface icons and button visuals
-│   │   └── logo.png            # Scribbl application logo
+│   │   ├── icons/
+│   │   └── logo.png
 │   │
-│   └── /fonts/                 # Custom or web-embedded fonts
+│   └── /fonts/
 │
-├── /templates/                 # Reusable HTML components
-│   ├── note_card.html          # Template for displaying a single note
-│   ├── history_modal.html      # Layout for progress tracking and version history
-│   └── settings_panel.html     # User settings such as themes and preferences
+├── /templates/
+│   ├── note_card.html
+│   ├── secure_note_card.html   # For secure/personal notes
+│   ├── pattern_lock.html       # Pattern lock interface
+│   ├── history_modal.html
+│   ├── settings_panel.html
+│   └── auth_form.html
 │
-├── /assets/                    # Additional media like backgrounds or illustrations
+├── /assets/
+│   # Optional illustrations or media
 │
-└── README.md                   # Documentation, setup guide, and project overview
+├── app.py (optional)
+│   # Optional Flask backend for encrypted storage
+│
+└── README.md
