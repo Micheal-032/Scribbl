@@ -1,44 +1,95 @@
 Scribbl/
 │
 ├── index.html
-│   # Landing page for login/signup
+│   # The landing page of the application where users log in or sign up.
+│   # It connects to auth.js for handling authentication and redirects users to the dashboard after a successful login.
 │
 ├── dashboard.html
-│   # Main note dashboard after login
+│   # The main workspace shown after login.
+│   # This page displays all user notes, secure notes, progress tracking, and settings.
+│   # It links to the note templates and JavaScript modules that handle app interactions.
 │
-├── /static/
-│   ├── /css/
-│   │   ├── style.css         # General styling
-│   │   ├── theme.css         # Theme handling
-│   │   ├── auth.css          # Login/Signup design
-│   │   └── secure.css        # Pattern lock & secure note styles
+├── static/
+│   # Contains all static assets such as stylesheets, scripts, images, and fonts used across the app.
+│
+│   ├── css/
+│   │   ├── style.css         
+│   │   │   # Defines the general visual styling shared across all pages (buttons, layouts, typography).
+│   │   │
+│   │   ├── auth.css          
+│   │   │   # Handles the visual design for the login and signup forms on index.html.
+│   │   │
+│   │   ├── dashboard.css     
+│   │   │   # Contains styles specifically for dashboard.html.
+│   │   │   # Manages layout of the sidebar, note grid, modals, and responsive behavior.
+│   │   │
+│   │   ├── secure.css        
+│   │   │   # Manages the look and feel of secure notes, password/pattern input modals, and locked views.
+│   │   │
+│   │   └── theme.css         
+│   │       # Defines color themes (light and dark mode) and variables for consistent theming across the app.
 │   │
-│   ├── /js/
-│   │   ├── auth.js           # Handles user authentication and validation
-│   │   ├── main.js           # Core note management
-│   │   ├── ui.js             # Renders UI and modals
-│   │   ├── progress.js       # Progress tracking and analytics
-│   │   ├── secure.js         # Handles secure notes, password/pattern validation
-│   │   └── utils.js          # Helper functions (tags, localStorage, session)
+│   ├── js/
+│   │   ├── auth.js           
+│   │   │   # Manages user authentication including login, signup, validation, and session control.
+│   │   │
+│   │   ├── main.js           
+│   │   │   # Handles the core note logic — creating, editing, deleting, and saving notes.
+│   │   │
+│   │   ├── dashboard.js      
+│   │   │   # Manages dashboard-specific behavior such as navigation, filtering notes, and updating UI states.
+│   │   │
+│   │   ├── ui.js             
+│   │   │   # Handles rendering of dynamic UI elements and interactions such as modals, alerts, and card generation.
+│   │   │
+│   │   ├── progress.js       
+│   │   │   # Controls progress tracking and data visualization (charts, analytics, and activity summaries).
+│   │   │
+│   │   ├── secure.js         
+│   │   │   # Implements logic for secure notes — encryption, unlocking, and pattern/password verification.
+│   │   │
+│   │   └── utils.js          
+│   │       # Contains helper functions used throughout the app (e.g., tag handling, data storage, date formatting).
 │   │
-│   ├── /images/
-│   │   ├── icons/
-│   │   └── logo.png
+│   ├── images/
+│   │   ├── icons/            
+│   │   │   # Contains icon assets used across the interface (buttons, actions, etc.).
+│   │   │
+│   │   └── logo.png          
+│   │       # Application logo displayed on login and dashboard headers.
 │   │
-│   └── /fonts/
+│   └── fonts/                
+│       # Custom or imported fonts used for consistent typography.
 │
-├── /templates/
-│   ├── note_card.html
-│   ├── secure_note_card.html   # For secure/personal notes
-│   ├── pattern_lock.html       # Pattern lock interface
-│   ├── history_modal.html
-│   ├── settings_panel.html
-│   └── auth_form.html
+├── templates/                
+│   # Includes small, reusable HTML fragments that make up different interface components.
+│   # These are loaded dynamically into the dashboard or other parts of the app.
+│   │
+│   ├── note_card.html        
+│   │   # Template for displaying a single regular note with title, content, tags, and edit/delete options.
+│   │
+│   ├── secure_note_card.html 
+│   │   # Similar to note_card but used for private, locked notes that require authentication to open.
+│   │
+│   ├── pattern_lock.html     
+│   │   # Defines the visual layout and structure for the pattern lock system used to access secure notes.
+│   │
+│   ├── history_modal.html    
+│   │   # Template for showing note history or progress tracking in a popup modal.
+│   │
+│   ├── settings_panel.html   
+│   │   # Contains the structure for user settings such as theme, layout, and account preferences.
+│   │
+│   └── auth_form.html        
+│       # Reusable structure for login and signup forms, allowing consistent design and easy updates.
 │
-├── /assets/
-│   # Optional illustrations or media
+├── assets/                   
+│   # Stores additional media, illustrations, or background images used in the app.
 │
-├── app.py (optional)
-│   # Optional Flask backend for encrypted storage
+├── app.py (optional)         
+│   # Optional backend written in Python (Flask).
+│   # Can be used for encrypted data handling, user account storage, or AI-based features in the future.
 │
-└── README.md
+└── README.md                 
+    # Documentation file that explains project overview, features, setup guide, and contribution details.
+
