@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scribbl - Note History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        :root {
+            /* Color Palette - Professional & Vibrant */
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --primary-light: #4895ef;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --warning: #fca311;
+            --danger: #e63946;
+            
+            /* Background Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --bg-overlay: rgba(15, 23, 42, 0.7);
+            --bg-card: #ffffff;
+            --bg-timeline: #f1f3f9;
+            
+            /* Text Colors */
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --text-muted: #6c757d;
+            --text-light: #adb5bd;
+            
+            /* Border Colors */
+            --border-color: #dee2e6;
+            --border-light: #e9ecef;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #4361ee, #3a0ca3);
+            --gradient-secondary: linear-gradient(135deg, #7209b7, #4361ee);
+            --gradient-accent: linear-gradient(135deg, #f72585, #b5179e);
+            --gradient-success: linear-gradient(135deg, #4cc9f0, #4895ef);
+            --gradient-card: linear-gradient(135deg, #ffffff, #f8f9fa);
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-2xl: 20px;
+            
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-sm: 0.75rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            /* Typography */
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            
+            /* Transitions */
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        body {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Demo Dashboard */
+        .dashboard {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--space-xl);
+            text-align: center;
+        }
+
+        .dashboard h1 {
+            margin-bottom: var(--space-lg);
+            color: var(--primary);
+        }
+
+        .dashboard p {
+            margin-bottom: var(--space-xl);
+            color: var(--text-secondary);
+        }
+
+        /* Modal Backdrop */
+        .history-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-overlay);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            padding: var(--space-md);
+        }
+
+        .history-modal-backdrop.active {
+            display: flex;
+            animation: fadeIn var(--transition-normal) forwards;
+        }
+
+        /* Modal Container */
+        .history-modal {
+            width: 100%;
+            max-width: 1200px;
+            height: 90%;
+            max-height: 850px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.9);
+            animation: scaleIn var(--transition-normal) forwards;
+            border: 1px solid var(--border-light);
+        }
+
+        /* Header */
+        .history-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-lg) var(--space-xl);
+            background: var(--gradient-primary);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .history-modal-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        .history-modal-title {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .history-modal-title i {
+            font-size: 1.5em;
+        }
+
+        .history-modal-actions {
+            display: flex;
+            gap: var(--space-sm);
+            z-index: 1;
+        }
+
+        /* Main Content Area */
+        .history-modal-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Timeline Panel */
+        .history-timeline {
+            width: 320px;
+            background: var(--bg-timeline);
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .history-timeline::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 30px;
+            width: 2px;
+            background: var(--primary-light);
+            opacity: 0.3;
+        }
+
+        .history-timeline-header {
+            padding: var(--space-lg);
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-timeline-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .history-timeline-filter {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .history-timeline-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+        }
+
+        .history-timeline-item {
+            position: relative;
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: 1px solid transparent;
+            z-index: 1;
+        }
+
+        .history-timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -41px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            z-index: 2;
+            transition: all var(--transition-fast);
+        }
+
+        .history-timeline-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-light);
+        }
+
+        .history-timeline-item.active {
+            border-color: var(--primary);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .history-timeline-item.active::before {
+            background: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .history-timeline-date {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .history-timeline-time {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            margin-bottom: var(--space-xs);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .history-timeline-snippet {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+
+        .history-timeline-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .badge-autosave {
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(76, 201, 240, 0.3);
+        }
+
+        .badge-manual {
+            background: rgba(114, 9, 183, 0.1);
+            color: var(--secondary);
+            border: 1px solid rgba(114, 9, 183, 0.3);
+        }
+
+        .badge-restored {
+            background: rgba(252, 163, 17, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(252, 163, 17, 0.3);
+        }
+
+        /* Preview Panel */
+        .history-preview {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .history-preview-header {
+            padding: var(--space-lg) var(--space-xl);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+        }
+
+        .history-preview-meta {
+            display: flex;
+            gap: var(--space-lg);
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .history-preview-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .history-preview-content {
+            flex: 1;
+            padding: var(--space-xl);
+            overflow-y: auto;
+            font-size: var(--font-size-base);
+            line-height: 1.7;
+            background: var(--bg-card);
+        }
+
+        .history-preview-content h1,
+        .history-preview-content h2,
+        .history-preview-content h3 {
+            margin-bottom: var(--space-md);
+            color: var(--text-primary);
+        }
+
+        .history-preview-content p {
+            margin-bottom: var(--space-md);
+        }
+
+        .history-preview-footer {
+            padding: var(--space-lg) var(--space-xl);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-secondary);
+        }
+
+        .history-version-info {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .history-footer-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        /* Compare Mode */
+        .history-compare {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .history-compare-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-right: 1px solid var(--border-light);
+        }
+
+        .history-compare-pane:last-child {
+            border-right: none;
+        }
+
+        .history-compare-header {
+            padding: var(--space-lg) var(--space-xl);
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-compare-title {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .history-compare-meta {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .history-compare-content {
+            flex: 1;
+            padding: var(--space-xl);
+            overflow-y: auto;
+            font-size: var(--font-size-base);
+            line-height: 1.7;
+        }
+
+        /* Diff Styling */
+        .diff-added {
+            background-color: rgba(76, 201, 240, 0.2);
+            padding: 2px 4px;
+            border-radius: 3px;
+            border-left: 2px solid var(--success);
+        }
+
+        .diff-removed {
+            background-color: rgba(230, 57, 70, 0.15);
+            padding: 2px 4px;
+            border-radius: 3px;
+            text-decoration: line-through;
+            border-left: 2px solid var(--danger);
+        }
+
+        .diff-changed {
+            background-color: rgba(252, 163, 17, 0.15);
+            padding: 2px 4px;
+            border-radius: 3px;
+            border-left: 2px solid var(--warning);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: none;
+            outline: none;
+            gap: var(--space-xs);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left var(--transition-normal);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .btn-accent {
+            background: var(--gradient-accent);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-accent:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-danger:hover {
+            background: #d1343f;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-sm {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: var(--font-size-xs);
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Icons */
+        .icon {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-10px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .history-modal {
+                height: 95%;
+            }
+            
+            .history-timeline {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .history-modal {
+                width: 100%;
+                height: 100%;
+                max-height: none;
+                border-radius: 0;
+            }
+            
+            .history-modal-content {
+                flex-direction: column;
+            }
+            
+            .history-timeline {
+                width: 100%;
+                height: 250px;
+                border-right: none;
+                border-bottom: 1px solid var(--border-light);
+            }
+            
+            .history-timeline::after {
+                left: 20px;
+            }
+            
+            .history-timeline-item::before {
+                left: -31px;
+            }
+            
+            .history-compare {
+                flex-direction: column;
+            }
+            
+            .history-compare-pane {
+                border-right: none;
+                border-bottom: 1px solid var(--border-light);
+            }
+            
+            .history-preview-meta {
+                flex-direction: column;
+                gap: var(--space-xs);
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            padding: 0 var(--space-xl);
+        }
+
+        .stat-card {
+            flex: 1;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        .stat-card.words {
+            border-top: 3px solid var(--success);
+        }
+
+        .stat-card.changes {
+            border-top: 3px solid var(--warning);
+        }
+
+        .stat-card.time {
+            border-top: 3px solid var(--primary);
+        }
+
+        /* Progress Visualization */
+        .progress-visualization {
+            margin: var(--space-lg) var(--space-xl);
+            padding: var(--space-lg);
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .progress-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            color: var(--text-primary);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: var(--space-md);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 4px;
+            transition: width var(--transition-slow);
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-2xl);
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: var(--space-md);
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-sm);
+            color: var(--text-secondary);
+        }
+
+        .empty-state p {
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        /* Demo Button */
+        .demo-button {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-md);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* AI Summary Panel */
+        .ai-summary-panel {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin: var(--space-lg) var(--space-xl);
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--accent);
+        }
+
+        .ai-summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .ai-summary-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .ai-summary-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Filter Panel */
+        .filter-panel {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            margin: var(--space-sm) var(--space-md);
+            box-shadow: var(--shadow-md);
+            display: none;
+        }
+
+        .filter-panel.active {
+            display: block;
+            animation: slideIn var(--transition-normal);
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .filter-option input {
+            margin: 0;
+        }
+
+        .filter-option label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Dashboard -->
+    <div class="dashboard">
+        <h1>Scribbl Dashboard</h1>
+        <p>Click the button below to open the History Modal and explore note version history</p>
+        <button class="demo-button" id="openModal">
+            <i class="fas fa-history"></i> Open History Modal
+        </button>
+    </div>
+
+    <!-- History Modal -->
+    <div class="history-modal-backdrop" id="historyModal">
+        <div class="history-modal">
+            <!-- Header -->
+            <div class="history-modal-header">
+                <div class="history-modal-title">
+                    <i class="fas fa-history"></i>
+                    <span id="modalTitle">Project Plan — History</span>
+                </div>
+                <div class="history-modal-actions">
+                    <button class="btn btn-accent" id="compareToggle">
+                        <i class="fas fa-columns"></i>
+                        Compare Mode
+                    </button>
+                    <button class="btn btn-secondary" id="closeModal">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="history-modal-content">
+                <!-- Timeline Panel -->
+                <div class="history-timeline">
+                    <div class="history-timeline-header">
+                        <div class="history-timeline-title">Version History</div>
+                        <div class="history-timeline-filter">
+                            <button class="btn btn-outline btn-sm" id="filterToggle">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                            <button class="btn btn-outline btn-sm" id="sortToggle">
+                                <i class="fas fa-sort-amount-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Panel -->
+                    <div class="filter-panel" id="filterPanel">
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="filterManual" checked>
+                                <label for="filterManual">Manual Saves</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="filterAutosave" checked>
+                                <label for="filterAutosave">Auto Saves</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="filterRestored">
+                                <label for="filterRestored">Restored Versions</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="history-timeline-list" id="timelineList">
+                        <!-- Timeline items will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Preview Panel (Default) -->
+                <div class="history-preview" id="previewPanel">
+                    <div class="history-preview-header">
+                        <div class="history-preview-meta">
+                            <span id="versionDate"><i class="far fa-calendar"></i> Oct 24, 2025 - 10:42 AM</span>
+                            <span id="versionAuthor"><i class="far fa-user"></i> by You</span>
+                            <span id="versionStats"><i class="far fa-clock"></i> 15 min read</span>
+                        </div>
+                        <div class="history-preview-actions">
+                            <button class="btn btn-outline btn-sm" id="downloadVersion">
+                                <i class="fas fa-download"></i>
+                                Download
+                            </button>
+                            <button class="btn btn-outline btn-sm" id="aiSummary">
+                                <i class="fas fa-robot"></i>
+                                AI Summary
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Cards -->
+                    <div class="stats-container">
+                        <div class="stat-card words">
+                            <div class="stat-value" id="wordCount">245</div>
+                            <div class="stat-label">Words</div>
+                        </div>
+                        <div class="stat-card changes">
+                            <div class="stat-value" id="changeCount">+12</div>
+                            <div class="stat-label">Changes</div>
+                        </div>
+                        <div class="stat-card time">
+                            <div class="stat-value" id="editTime">2.5h</div>
+                            <div class="stat-label">Edit Time</div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Summary Panel -->
+                    <div class="ai-summary-panel" id="aiSummaryPanel" style="display: none;">
+                        <div class="ai-summary-header">
+                            <div class="ai-summary-title">
+                                <i class="fas fa-robot"></i>
+                                AI Summary
+                            </div>
+                            <button class="btn btn-sm btn-outline" id="closeAISummary">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="ai-summary-content" id="aiSummaryContent">
+                            <!-- AI Summary content will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Visualization -->
+                    <div class="progress-visualization">
+                        <div class="progress-title">Writing Progress</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                        <div class="progress-labels">
+                            <span>Start</span>
+                            <span>Current</span>
+                        </div>
+                    </div>
+                    
+                    <div class="history-preview-content" id="previewContent">
+                        <!-- Preview content will be dynamically inserted here -->
+                    </div>
+                    <div class="history-preview-footer">
+                        <div class="history-version-info">
+                            <i class="fas fa-code-branch"></i>
+                            <span id="versionInfo">Version 3 of 12</span>
+                        </div>
+                        <div class="history-footer-actions">
+                            <button class="btn btn-outline" id="cancelRestore">Cancel</button>
+                            <button class="btn btn-primary" id="restoreVersion">
+                                <i class="fas fa-undo-alt"></i>
+                                Restore This Version
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compare Panel (Hidden by default) -->
+                <div class="history-compare" id="comparePanel" style="display: none;">
+                    <div class="history-compare-pane">
+                        <div class="history-compare-header">
+                            <div class="history-compare-title" id="compareLeftTitle">
+                                <i class="far fa-file-alt"></i> Oct 23, 2025 - 3:15 PM
+                            </div>
+                            <div class="history-compare-meta" id="compareLeftMeta">
+                                198 words • 12 min read
+                            </div>
+                        </div>
+                        <div class="history-compare-content" id="compareLeftContent">
+                            <!-- Left compare content will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    <div class="history-compare-pane">
+                        <div class="history-compare-header">
+                            <div class="history-compare-title" id="compareRightTitle">
+                                <i class="far fa-file-alt"></i> Oct 24, 2025 - 10:42 AM
+                            </div>
+                            <div class="history-compare-meta" id="compareRightMeta">
+                                245 words • 15 min read
+                            </div>
+                        </div>
+                        <div class="history-compare-content" id="compareRightContent">
+                            <!-- Right compare content will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for demonstration
+        const noteHistory = [
+            {
+                id: 1,
+                date: "Oct 24, 2025",
+                time: "10:42 AM",
+                title: "Project Plan - Final Review",
+                content: `<h2>Project Plan - Final Review</h2>
+                <p>After careful consideration of all feedback, I've finalized the project plan. The timeline has been adjusted to account for the new feature requests from the client. The budget remains within the approved limits, and we've allocated additional resources to the design phase to ensure we meet the quality standards.</p>
+                <p>The development team has reviewed the technical requirements and confirmed feasibility. We'll be using React for the frontend and Node.js for the backend, with MongoDB as our database solution.</p>
+                <h3>Key Milestones</h3>
+                <ul>
+                    <li>Design completion: Nov 15, 2025</li>
+                    <li>Prototype development: Dec 10, 2025</li>
+                    <li>Beta testing: Jan 20, 2026</li>
+                    <li>Official launch: Feb 15, 2026</li>
+                </ul>`,
+                author: "You",
+                wordCount: 245,
+                changeCount: "+12",
+                editTime: "2.5h",
+                readTime: 15,
+                version: "12 of 12",
+                type: "manual",
+                aiSummary: "This final version incorporates all client feedback with a refined timeline and detailed technical specifications. The project scope is now clearly defined with specific milestones and resource allocation."
+            },
+            {
+                id: 2,
+                date: "Oct 23, 2025",
+                time: "3:15 PM",
+                title: "Project Plan - Client Feedback",
+                content: `<h2>Project Plan - Client Feedback</h2>
+                <p>Received feedback from the client today. They requested additional features in the user dashboard and asked for a more detailed breakdown of the development phases. I've incorporated their suggestions and adjusted the timeline accordingly. Need to review with the team tomorrow.</p>
+                <p>The client specifically asked for:</p>
+                <ul>
+                    <li>Advanced analytics dashboard</li>
+                    <li>Custom reporting features</li>
+                    <li>Mobile app companion</li>
+                </ul>
+                <p>We'll need to adjust our resource allocation to accommodate these requests without impacting the delivery timeline.</p>`,
+                author: "You",
+                wordCount: 198,
+                changeCount: "+8",
+                editTime: "1.8h",
+                readTime: 12,
+                version: "11 of 12",
+                type: "manual",
+                aiSummary: "Client feedback has been incorporated with requests for additional dashboard features and mobile app development. The timeline requires adjustment to accommodate these new requirements."
+            },
+            {
+                id: 3,
+                date: "Oct 22, 2025",
+                time: "9:30 AM",
+                title: "Project Plan - Initial Draft",
+                content: `<h2>Project Plan - Initial Draft</h2>
+                <p>Started working on the project plan today. Outlined the main objectives, deliverables, and timeline. Still need to add resource allocation and risk assessment sections. The initial timeline seems realistic but will need to validate with the technical team.</p>
+                <p>Key objectives identified:</p>
+                <ul>
+                    <li>Create a user-friendly interface</li>
+                    <li>Implement secure authentication</li>
+                    <li>Ensure cross-platform compatibility</li>
+                </ul>
+                <p>Next steps: Schedule meeting with stakeholders to gather additional requirements.</p>`,
+                author: "You",
+                wordCount: 156,
+                changeCount: "+15",
+                editTime: "2.1h",
+                readTime: 9,
+                version: "10 of 12",
+                type: "autosave",
+                aiSummary: "Initial draft with basic project structure, objectives, and timeline. Missing detailed resource planning and risk assessment sections."
+            },
+            {
+                id: 4,
+                date: "Oct 20, 2025",
+                time: "2:45 PM",
+                title: "Project Plan - Brainstorming",
+                content: `<h2>Project Plan - Brainstorming</h2>
+                <p>Brainstorming session with the team today. We identified key features and potential challenges. The scope seems manageable but we'll need to prioritize features for the MVP. Next step is to create a detailed timeline and resource plan.</p>
+                <p>Features discussed:</p>
+                <ul>
+                    <li>Real-time collaboration</li>
+                    <li>File sharing capabilities</li>
+                    <li>Version control system</li>
+                </ul>
+                <p>Potential challenges: Integration with existing systems, data migration, and user training.</p>`,
+                author: "You",
+                wordCount: 132,
+                changeCount: "+22",
+                editTime: "1.5h",
+                readTime: 8,
+                version: "9 of 12",
+                type: "autosave",
+                aiSummary: "Brainstorming session outcomes with feature ideas and identified challenges. Focus on MVP prioritization and technical feasibility assessment."
+            },
+            {
+                id: 5,
+                date: "Oct 18, 2025",
+                time: "11:20 AM",
+                title: "Project Plan - Kickoff",
+                content: `<h2>Project Plan - Kickoff</h2>
+                <p>Initial project kickoff notes. Defined the problem statement and high-level goals. Need to schedule meetings with stakeholders to gather requirements and constraints. The project seems promising but will require careful planning.</p>
+                <p>Problem statement: Users need a more efficient way to collaborate on documents in real-time without the limitations of existing solutions.</p>
+                <p>High-level goals:</p>
+                <ul>
+                    <li>Reduce collaboration time by 30%</li>
+                    <li>Improve user satisfaction scores</li>
+                    <li>Increase team productivity</li>
+                </ul>`,
+                author: "You",
+                wordCount: 98,
+                changeCount: "+18",
+                editTime: "1.2h",
+                readTime: 6,
+                version: "8 of 12",
+                type: "manual",
+                aiSummary: "Project kickoff with defined problem statement and high-level goals. Initial scope established with focus on collaboration efficiency and productivity improvement."
+            }
+        ];
+
+        // DOM Elements
+        const historyModal = document.getElementById('historyModal');
+        const timelineList = document.getElementById('timelineList');
+        const previewPanel = document.getElementById('previewPanel');
+        const comparePanel = document.getElementById('comparePanel');
+        const compareToggle = document.getElementById('compareToggle');
+        const closeModal = document.getElementById('closeModal');
+        const previewContent = document.getElementById('previewContent');
+        const versionDate = document.getElementById('versionDate');
+        const versionAuthor = document.getElementById('versionAuthor');
+        const versionStats = document.getElementById('versionStats');
+        const versionInfo = document.getElementById('versionInfo');
+        const restoreVersion = document.getElementById('restoreVersion');
+        const cancelRestore = document.getElementById('cancelRestore');
+        const downloadVersion = document.getElementById('downloadVersion');
+        const aiSummary = document.getElementById('aiSummary');
+        const aiSummaryPanel = document.getElementById('aiSummaryPanel');
+        const aiSummaryContent = document.getElementById('aiSummaryContent');
+        const closeAISummary = document.getElementById('closeAISummary');
+        const compareLeftContent = document.getElementById('compareLeftContent');
+        const compareRightContent = document.getElementById('compareRightContent');
+        const compareLeftTitle = document.getElementById('compareLeftTitle');
+        const compareRightTitle = document.getElementById('compareRightTitle');
+        const compareLeftMeta = document.getElementById('compareLeftMeta');
+        const compareRightMeta = document.getElementById('compareRightMeta');
+        const wordCount = document.getElementById('wordCount');
+        const changeCount = document.getElementById('changeCount');
+        const editTime = document.getElementById('editTime');
+        const openModalBtn = document.getElementById('openModal');
+        const filterToggle = document.getElementById('filterToggle');
+        const sortToggle = document.getElementById('sortToggle');
+        const filterPanel = document.getElementById('filterPanel');
+        const filterManual = document.getElementById('filterManual');
+        const filterAutosave = document.getElementById('filterAutosave');
+        const filterRestored = document.getElementById('filterRestored');
+
+        // State
+        let currentVersion = noteHistory[0];
+        let isComparing = false;
+        let selectedVersions = [noteHistory[1], noteHistory[0]]; // [older, newer]
+        let isFilterOpen = false;
+        let isSortedNewestFirst = true;
+        let isGeneratingAISummary = false;
+
+        // Initialize the modal
+        function initModal() {
+            renderTimeline();
+            renderPreview(currentVersion);
+            setupEventListeners();
+        }
+
+        // Render timeline items
+        function renderTimeline() {
+            timelineList.innerHTML = '';
+            
+            // Sort based on current state
+            const sortedHistory = [...noteHistory];
+            if (!isSortedNewestFirst) {
+                sortedHistory.reverse();
+            }
+            
+            // Filter based on current filter settings
+            const filteredHistory = sortedHistory.filter(version => {
+                if (version.type === 'manual' && !filterManual.checked) return false;
+                if (version.type === 'autosave' && !filterAutosave.checked) return false;
+                if (version.type === 'restored' && !filterRestored.checked) return false;
+                return true;
+            });
+            
+            if (filteredHistory.length === 0) {
+                timelineList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No versions found</h3>
+                        <p>Adjust your filters to see version history</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredHistory.forEach(version => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = `history-timeline-item ${version.id === currentVersion.id ? 'active' : ''}`;
+                
+                let badgeClass = 'badge-manual';
+                if (version.type === 'autosave') badgeClass = 'badge-autosave';
+                if (version.type === 'restored') badgeClass = 'badge-restored';
+                
+                timelineItem.innerHTML = `
+                    <div class="history-timeline-date">
+                        <i class="far fa-calendar"></i>
+                        ${version.date}
+                        <span class="history-timeline-badge ${badgeClass}">${version.type}</span>
+                    </div>
+                    <div class="history-timeline-time">
+                        <i class="far fa-clock"></i>
+                        ${version.time}
+                    </div>
+                    <div class="history-timeline-snippet">${version.title}</div>
+                `;
+                
+                timelineItem.addEventListener('click', () => {
+                    if (isComparing) {
+                        // In compare mode, select versions for comparison
+                        selectForComparison(version);
+                    } else {
+                        // In preview mode, show the selected version
+                        selectVersion(version);
+                    }
+                });
+                
+                timelineList.appendChild(timelineItem);
+            });
+        }
+
+        // Select a version for preview
+        function selectVersion(version) {
+            currentVersion = version;
+            renderPreview(version);
+            updateActiveTimelineItem();
+            
+            // Hide AI summary when changing versions
+            aiSummaryPanel.style.display = 'none';
+        }
+
+        // Select a version for comparison
+        function selectForComparison(version) {
+            // Simple logic: if we have two versions selected, replace the older one
+            // In a real app, you'd have more sophisticated selection logic
+            if (selectedVersions[0].id === version.id || selectedVersions[1].id === version.id) {
+                // If clicking on an already selected version, do nothing
+                return;
+            }
+            
+            // Replace the older version with the newly selected one
+            selectedVersions = [version, selectedVersions[1]];
+            renderComparison();
+            updateActiveTimelineItem();
+        }
+
+        // Render the preview panel
+        function renderPreview(version) {
+            versionDate.innerHTML = `<i class="far fa-calendar"></i> ${version.date} - ${version.time}`;
+            versionAuthor.innerHTML = `<i class="far fa-user"></i> by ${version.author}`;
+            versionStats.innerHTML = `<i class="far fa-clock"></i> ${version.readTime} min read`;
+            versionInfo.textContent = `Version ${version.version}`;
+            
+            wordCount.textContent = version.wordCount;
+            changeCount.textContent = version.changeCount;
+            editTime.textContent = version.editTime;
+            
+            previewContent.innerHTML = version.content;
+            
+            // Show/hide restore button based on whether this is the latest version
+            if (version.id === noteHistory[0].id) {
+                restoreVersion.style.display = 'none';
+                cancelRestore.style.display = 'none';
+            } else {
+                restoreVersion.style.display = 'inline-flex';
+                cancelRestore.style.display = 'inline-flex';
+            }
+        }
+
+        // Render the comparison panel
+        function renderComparison() {
+            const olderVersion = selectedVersions[0];
+            const newerVersion = selectedVersions[1];
+            
+            compareLeftTitle.innerHTML = `<i class="far fa-file-alt"></i> ${olderVersion.date} - ${olderVersion.time}`;
+            compareRightTitle.innerHTML = `<i class="far fa-file-alt"></i> ${newerVersion.date} - ${newerVersion.time}`;
+            
+            compareLeftMeta.textContent = `${olderVersion.wordCount} words • ${olderVersion.readTime} min read`;
+            compareRightMeta.textContent = `${newerVersion.wordCount} words • ${newerVersion.readTime} min read`;
+            
+            // Simple diff simulation - in a real app, you'd use a proper diff algorithm
+            compareLeftContent.innerHTML = simulateDiffView(olderVersion.content, newerVersion.content, 'left');
+            compareRightContent.innerHTML = simulateDiffView(newerVersion.content, olderVersion.content, 'right');
+        }
+
+        // Simple diff simulation for demonstration
+        function simulateDiffView(text1, text2, side) {
+            // This is a very simplified diff simulation
+            // In a real app, you'd use a proper diff algorithm like Myers or Hunt-McIlroy
+            
+            if (side === 'left') {
+                // For left side, show removed content
+                return text1 + 
+                    `<p><span class="diff-removed">This content was removed in the next version: Additional features requested by client</span></p>`;
+            } else {
+                // For right side, show added content
+                return text2 + 
+                    `<p><span class="diff-added">This content was added in this version: Advanced analytics dashboard, custom reporting features, mobile app companion</span></p>`;
+            }
+        }
+
+        // Update active timeline item
+        function updateActiveTimelineItem() {
+            const timelineItems = document.querySelectorAll('.history-timeline-item');
+            
+            timelineItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (isComparing) {
+                // In compare mode, highlight both selected versions
+                selectedVersions.forEach(version => {
+                    const itemIndex = isSortedNewestFirst ? 
+                        (noteHistory.length - version.id) : 
+                        (version.id - 1);
+                    const item = timelineItems[itemIndex];
+                    if (item) {
+                        item.classList.add('active');
+                    }
+                });
+            } else {
+                // In preview mode, highlight the current version
+                const itemIndex = isSortedNewestFirst ? 
+                    (noteHistory.length - currentVersion.id) : 
+                    (currentVersion.id - 1);
+                const currentItem = timelineItems[itemIndex];
+                if (currentItem) {
+                    currentItem.classList.add('active');
+                }
+            }
+        }
+
+        // Toggle compare mode
+        function toggleCompareMode() {
+            isComparing = !isComparing;
+            
+            if (isComparing) {
+                previewPanel.style.display = 'none';
+                comparePanel.style.display = 'flex';
+                compareToggle.innerHTML = `<i class="fas fa-times"></i> Exit Compare`;
+                compareToggle.classList.remove('btn-accent');
+                compareToggle.classList.add('btn-danger');
+                renderComparison();
+            } else {
+                previewPanel.style.display = 'flex';
+                comparePanel.style.display = 'none';
+                compareToggle.innerHTML = `<i class="fas fa-columns"></i> Compare Mode`;
+                compareToggle.classList.remove('btn-danger');
+                compareToggle.classList.add('btn-accent');
+                renderPreview(currentVersion);
+            }
+            
+            updateActiveTimelineItem();
+        }
+
+        // Toggle filter panel
+        function toggleFilter() {
+            isFilterOpen = !isFilterOpen;
+            filterPanel.classList.toggle('active', isFilterOpen);
+            filterToggle.classList.toggle('btn-primary', isFilterOpen);
+            filterToggle.classList.toggle('btn-outline', !isFilterOpen);
+        }
+
+        // Toggle sort order
+        function toggleSort() {
+            isSortedNewestFirst = !isSortedNewestFirst;
+            sortToggle.classList.toggle('btn-primary', !isSortedNewestFirst);
+            sortToggle.classList.toggle('btn-outline', isSortedNewestFirst);
+            
+            sortToggle.innerHTML = isSortedNewestFirst ? 
+                `<i class="fas fa-sort-amount-down"></i>` : 
+                `<i class="fas fa-sort-amount-up"></i>`;
+            
+            renderTimeline();
+            updateActiveTimelineItem();
+        }
+
+        // Generate AI Summary
+        function generateAISummary() {
+            if (isGeneratingAISummary) return;
+            
+            isGeneratingAISummary = true;
+            aiSummary.innerHTML = '<div class="loading"></div>';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                aiSummaryContent.textContent = currentVersion.aiSummary;
+                aiSummaryPanel.style.display = 'block';
+                aiSummary.innerHTML = '<i class="fas fa-robot"></i> AI Summary';
+                isGeneratingAISummary = false;
+                
+                // Scroll to AI summary
+                aiSummaryPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 1500);
+        }
+
+        // Close AI Summary
+        function closeAISummaryPanel() {
+            aiSummaryPanel.style.display = 'none';
+        }
+
+        // Restore version
+        function handleRestoreVersion() {
+            if (confirm(`Are you sure you want to restore this version? This will replace the current content of your note.`)) {
+                // In a real app, this would call the main.js function to restore the version
+                alert(`Version restored successfully!`);
+                closeHistoryModal();
+            }
+        }
+
+        // Download version
+        function handleDownloadVersion() {
+            // Create a blob with the content
+            const content = `
+                Scribbl - Note History Export
+                =============================
+                
+                Title: ${currentVersion.title}
+                Date: ${currentVersion.date} ${currentVersion.time}
+                Author: ${currentVersion.author}
+                Version: ${currentVersion.version}
+                
+                ${currentVersion.content.replace(/<[^>]*>/g, '')}
+            `;
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            // Create a temporary link and trigger download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `scribbl-${currentVersion.title.toLowerCase().replace(/\s+/g, '-')}-${currentVersion.date}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            // Show confirmation
+            const originalText = downloadVersion.innerHTML;
+            downloadVersion.innerHTML = '<i class="fas fa-check"></i> Downloaded!';
+            setTimeout(() => {
+                downloadVersion.innerHTML = originalText;
+            }, 2000);
+        }
+
+        // Open modal
+        function openHistoryModal() {
+            historyModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close modal
+        function closeHistoryModal() {
+            historyModal.style.animation = 'fadeOut var(--transition-normal) forwards';
+            setTimeout(() => {
+                historyModal.classList.remove('active');
+                historyModal.style.animation = '';
+                document.body.style.overflow = '';
+                // Reset to default state
+                isComparing = false;
+                currentVersion = noteHistory[0];
+                selectedVersions = [noteHistory[1], noteHistory[0]];
+                previewPanel.style.display = 'flex';
+                comparePanel.style.display = 'none';
+                compareToggle.innerHTML = `<i class="fas fa-columns"></i> Compare Mode`;
+                compareToggle.classList.remove('btn-danger');
+                compareToggle.classList.add('btn-accent');
+                aiSummaryPanel.style.display = 'none';
+                filterPanel.classList.remove('active');
+                isFilterOpen = false;
+                filterToggle.classList.remove('btn-primary');
+                filterToggle.classList.add('btn-outline');
+                renderPreview(currentVersion);
+                updateActiveTimelineItem();
+            }, 250);
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            openModalBtn.addEventListener('click', openHistoryModal);
+            compareToggle.addEventListener('click', toggleCompareMode);
+            closeModal.addEventListener('click', closeHistoryModal);
+            restoreVersion.addEventListener('click', handleRestoreVersion);
+            cancelRestore.addEventListener('click', () => {
+                // In a real app, this might reset any selection state
+                selectVersion(noteHistory[0]);
+            });
+            downloadVersion.addEventListener('click', handleDownloadVersion);
+            aiSummary.addEventListener('click', generateAISummary);
+            closeAISummary.addEventListener('click', closeAISummaryPanel);
+            filterToggle.addEventListener('click', toggleFilter);
+            sortToggle.addEventListener('click', toggleSort);
+            
+            // Filter change listeners
+            filterManual.addEventListener('change', renderTimeline);
+            filterAutosave.addEventListener('change', renderTimeline);
+            filterRestored.addEventListener('change', renderTimeline);
+            
+            // Close modal when clicking on backdrop
+            historyModal.addEventListener('click', (e) => {
+                if (e.target === historyModal) {
+                    closeHistoryModal();
+                }
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && historyModal.classList.contains('active')) {
+                    closeHistoryModal();
+                }
+            });
+        }
+
+        // Initialize the modal when the page loads
+        document.addEventListener('DOMContentLoaded', initModal);
+    </script>
+</body>
+</html>
