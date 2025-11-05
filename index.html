@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Scribbl — Sign in / Sign up</title>
+
+  <!-- Link to auth.css -->
+  <link rel="stylesheet" href="static/css/auth.css">
+
+  <!-- Lightweight icon font (optional) -->
+  <link rel="preload" href="static/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+</head>
+<body class="sb-auth-page" data-theme="auto">
+  <main class="sb-auth-layout" id="sb-auth-root">
+    <header class="sb-auth-header" role="banner">
+      <img src="static/images/logo.png" alt="Scribbl logo" class="sb-logo">
+      <h1 class="sb-title">Scribbl</h1>
+      <p class="sb-subtitle">Local-first notes, private by default</p>
+    </header>
+
+    <section class="sb-auth-card" role="region" aria-labelledby="authHeading">
+      <h2 id="authHeading" class="visually-hidden">Sign in or create an account</h2>
+
+      <!-- Toggle tabs -->
+      <div class="sb-auth-tabs" role="tablist" aria-label="Authentication options">
+        <button id="tab-signin" class="sb-tab sb-tab--active" role="tab" aria-selected="true" aria-controls="panel-signin">Sign in</button>
+        <button id="tab-signup" class="sb-tab" role="tab" aria-selected="false" aria-controls="panel-signup">Sign up</button>
+      </div>
+
+      <!-- Sign in panel -->
+      <form id="panel-signin" class="sb-form" role="form" aria-labelledby="signin-title" novalidate>
+        <h3 id="signin-title" class="sb-form-title">Sign in</h3>
+
+        <label for="signin-email" class="sb-label">Email</label>
+        <input id="signin-email" class="sb-input" name="email" type="email" inputmode="email" autocomplete="email" required aria-required="true" />
+
+        <label for="signin-password" class="sb-label">Password</label>
+        <input id="signin-password" class="sb-input" name="password" type="password" autocomplete="current-password" required aria-required="true" />
+
+        <div class="sb-row sb-row--space-between">
+          <label class="sb-checkbox">
+            <input id="signin-remember" type="checkbox" aria-checked="false" />
+            <span>Remember me (optional)</span>
+          </label>
+          <button id="signin-forgot" type="button" class="sb-link" aria-haspopup="dialog">Forgot password?</button>
+        </div>
+
+        <div class="sb-form-actions">
+          <button id="signin-submit" type="submit" class="sb-btn sb-btn--primary">Sign in</button>
+          <button id="signin-switch" type="button" class="sb-btn sb-btn--ghost">Create account</button>
+        </div>
+
+        <div id="signin-error" class="sb-error" role="alert" aria-live="assertive" hidden></div>
+      </form>
+
+      <!-- Sign up panel (hidden by default) -->
+      <form id="panel-signup" class="sb-form sb-hidden" role="form" aria-labelledby="signup-title" novalidate>
+        <h3 id="signup-title" class="sb-form-title">Create an account</h3>
+
+        <label for="signup-email" class="sb-label">Email</label>
+        <input id="signup-email" class="sb-input" name="email" type="email" inputmode="email" autocomplete="email" required aria-required="true" />
+
+        <label for="signup-password" class="sb-label">Password</label>
+        <input id="signup-password" class="sb-input" name="password" type="password" autocomplete="new-password" required aria-required="true" aria-describedby="pw-help" />
+
+        <label for="signup-password-confirm" class="sb-label">Confirm password</label>
+        <input id="signup-password-confirm" class="sb-input" name="passwordConfirm" type="password" autocomplete="new-password" required aria-required="true" />
+
+        <div id="pw-strength-wrap" class="sb-pw-strength" aria-hidden="false">
+          <div id="pw-strength-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+          <div id="pw-strength-text" class="sb-muted" aria-live="polite">Password strength: <span id="pw-strength-label">—</span></div>
+        </div>
+
+        <div class="sb-note sb-note--info" id="pw-help">Use at least 12 characters, mix letters, numbers & symbols. Secure notes use this password to derive encryption keys — if you lose it they cannot be recovered.</div>
+
+        <div class="sb-form-actions">
+          <button id="signup-submit" type="submit" class="sb-btn sb-btn--primary">Create account</button>
+          <button id="signup-switch" type="button" class="sb-btn sb-btn--ghost">Back to sign in</button>
+        </div>
+
+        <div id="signup-error" class="sb-error" role="alert" aria-live="assertive" hidden></div>
+      </form>
+
+      <!-- A small footer with privacy & export info -->
+      <footer class="sb-auth-footer">
+        <p class="sb-muted">Your data stays on this device. Secure notes are encrypted locally using your password. <button id="backup-info" class="sb-link" type="button">How to back up</button></p>
+      </footer>
+    </section>
+
+    <!-- Forgot password modal -->
+    <div id="modal-forgot" class="sb-modal sb-hidden" role="dialog" aria-modal="true" aria-labelledby="forgot-title">
+      <div class="sb-modal-panel" role="document">
+        <h4 id="forgot-title">Forgot password</h4>
+        <p class="sb-muted">Scribbl stores secure note keys derived from your password locally. If you have secure notes and you lose your password, they cannot be decrypted. Options:</p>
+        <ul>
+          <li>Try other passwords you might have used.</li>
+          <li>If you previously exported a backup (Settings → Export), restore from the backup.</li>
+          <li>To reset the local account and start fresh, you can clear local data — this will delete all notes.</li>
+        </ul>
+        <div class="sb-modal-actions">
+          <button id="forgot-close" class="sb-btn sb-btn--ghost">Close</button>
+          <button id="forgot-reset" class="sb-btn sb-btn--danger">Reset local account (delete data)</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Hook for scripts -->
+  <script type="module" src="static/js/auth.js"></script>
+</body>
+</html>
