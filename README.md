@@ -41,7 +41,8 @@ Prerequisites
 Python 3.6 or higher
 Modern web browser
 
-*Installation Steps
+*Installation Steps ( After cloning inside scribbl folder there will be another scribbl folder cut or copy and paste it out of
+the main scribbl folder)
 1. Extract project files to your desired folder
 2. Open command prompt in the project directory
 3. Run the application:
