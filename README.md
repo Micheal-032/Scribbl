@@ -88,6 +88,8 @@ Modern web browser (Chrome, Firefox, Edge, Safari)
 3️⃣ Run the application:
 
 cd scribbl
+
+
 python app.py
 
 
