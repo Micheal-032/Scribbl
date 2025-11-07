@@ -1,45 +1,42 @@
-Scribbl/
+scribbl-app/
 │
-├── index.html
-├── dashboard.html
+├── 📄 app.py                          # Main Flask application
+├── 📄 setup.py                        # File organization helper
 │
-├── static/
-│   ├── css/
-│   │   ├── style.css                 # General + shared styles
-│   │   ├── auth.css                  # Login/Signup design
-│   │   ├── dashboard.css             # Dashboard-specific styles
-│   │   ├── secure.css                # Secure notes (privacy styling)
-│   │   ├── theme.css                 # Dark/Light themes
-│   │   ├── notes.css                 # Smart Note Management styling
-│   │   ├── search.css                # Tagging & Search System styling
-│   │   └── progress.css              # Progress Tracking & Analytics styling
+├── 📁 templates/                      # HTML templates
+│   ├── 📄 index.html                  # Login/Signup page
+│   ├── 📄 dashboard.html              # Main dashboard
+│   ├── 📄 notes.html                  # Notes management
+│   ├── 📄 progress.html               # Analytics & charts
+│   ├── 📄 history.html                # Note history
+│   ├── 📄 settings.html               # User settings
+│   └── 📄 secure-notes.html           # Encrypted notes
+│
+├── 📁 static/                         # Static assets
 │   │
-│   ├── js/
-│   │   ├── auth.js                   # Login/Signup logic
-│   │   ├── main.js                   # Core app initialization
-│   │   ├── dashboard.js              # Dashboard functionality
-│   │   ├── ui.js                     # UI helpers
-│   │   ├── progress.js               # Progress tracking and analytics logic
-│   │   ├── secure.js                 # Secure Notes logic
-│   │   ├── notes.js                  # Smart Note Management logic
-│   │   ├── search.js                 # Tagging and Search logic
-│   │   └── utils.js                  # Utility functions
+│   ├── 📁 css/                        # Stylesheets
+│   │   ├── 📄 auth.css                # Login/signup styles
+│   │   ├── 📄 dashboard.css           # Dashboard styles  
+│   │   ├── 📄 progress.css            # Progress page styles
+│   │   ├── 📄 notes.css               # Notes page styles
+│   │   ├── 📄 history.css             # History page styles
+│   │   ├── 📄 secure.css              # Secure notes styles
+│   │   └── 📄 settings.css            # Settings page styles
 │   │
-│   ├── images/
-│   │   ├── icons/                    # UI icons
-│   │   └── logo.png                  # App logo
+│   ├── 📁 js/                         # JavaScript modules
+│   │   ├── 📄 auth.js                 # Authentication & crypto
+│   │   ├── 📄 dashboard.js            # Dashboard functionality
+│   │   ├── 📄 progress.js             # Analytics & charts
+│   │   ├── 📄 notes.js                # Notes management
+│   │   ├── 📄 history.js              # History tracking
+│   │   ├── 📄 secure.js               # Secure notes encryption
+│   │   └── 📄 settings.js             # User settings
 │   │
-│   └── fonts/                        # Custom fonts
+│   ├── 📁 images/                     # Images & icons
+│   │   └── 📁 icons/                  # App icons
+│   │       └── 📄 logo.png            # Application logo
+│   │
+│   └── 📁 fonts/                      # Font files
+│       └── 📄 inter.woff2             # Inter font family
 │
-├── templates/                        
-│   ├── secure_note_card.html         # Secure Notes template
-│   ├── history_modal.html            # Version history / progress view
-│   ├── settings_panel.html           # Settings and theme preferences
-│   ├── progress_panel.html           # Progress Tracking interface
-│   └── search_bar.html               # Search and tagging component
-│
-├── assets/                           # Media/illustrations
-│
-├── app.py (optional)                 # Future backend
-│
-└── README.md                         # Project documentation
+└── 📄 README.md                       # This file
