@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scribbl — Notes</title>
+  <link rel="stylesheet" href="static/css/theme.css" />
+  <link rel="stylesheet" href="static/css/notes.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+</head>
+
+<body>
+  <!-- Enhanced Animated Background -->
+  <div class="notes-bg-animation">
+    <div class="floating-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+      <div class="shape shape-5"></div>
+    </div>
+    
+    <!-- Animated Grid System -->
+    <div class="animated-grid">
+      <div class="grid-line"></div>
+      <div class="grid-line"></div>
+      <div class="grid-line"></div>
+      <div class="grid-line"></div>
+    </div>
+    
+    <!-- Floating UI Elements -->
+    <div class="floating-elements">
+      <div class="floating-element element-1">📝</div>
+      <div class="floating-element element-2">✏️</div>
+      <div class="floating-element element-3">📚</div>
+      <div class="floating-element element-4">🔖</div>
+      <div class="floating-element element-5">📌</div>
+      <div class="floating-element element-6">🎯</div>
+    </div>
+    
+    <!-- Connection Lines -->
+    <div class="connection-lines">
+      <div class="connection-line line-1"></div>
+      <div class="connection-line line-2"></div>
+      <div class="connection-line line-3"></div>
+    </div>
+    
+    <!-- Animated Dots Pattern -->
+    <div class="dots-pattern">
+      <div class="dot-row"></div>
+      <div class="dot-row"></div>
+      <div class="dot-row"></div>
+    </div>
+    
+    <div class="particles-container" id="particles"></div>
+    
+    <!-- Gradient Orbs -->
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+
+  <!-- Enhanced Custom Cursor -->
+  <div class="custom-cursor" id="cursor">
+    <div class="cursor-inner"></div>
+  </div>
+  <div class="cursor-follower" id="cursorFollower">
+    <div class="follower-glow"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="notes-header">
+    <div class="header-content">
+      <div class="logo-section">
+        <!-- Back Button -->
+        <button id="backButton" class="back-btn magnetic" title="Back to Dashboard">
+          <span class="material-icons-round">arrow_back</span>
+          <span class="back-text">Back</span>
+          <div class="back-glow"></div>
+        </button>
+        
+        <div class="logo-icon">
+          <div class="logo-glow"></div>
+          ✍️
+        </div>
+        <div class="logo-text-container">
+          <h1 class="logo-text">My Notes</h1>
+          <div class="logo-subtitle">Organize your thoughts</div>
+        </div>
+        <div class="notes-count">
+          <span id="totalNotes">0</span> notes
+          <div class="count-glow"></div>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <!-- Enhanced Search Bar -->
+        <div class="search-container">
+          <div class="search-icon">🔍</div>
+          <input 
+            id="searchInput" 
+            type="text" 
+            placeholder="Search notes, tags, or content..." 
+            aria-label="Search notes"
+          />
+          <div class="search-underline"></div>
+          <div class="search-particles"></div>
+        </div>
+
+        <!-- View Controls -->
+        <div class="view-controls">
+          <button id="gridView" class="view-btn active" title="Grid View">
+            <span class="material-icons-round">grid_view</span>
+            <div class="view-btn-glow"></div>
+          </button>
+          <button id="listView" class="view-btn" title="List View">
+            <span class="material-icons-round">view_list</span>
+            <div class="view-btn-glow"></div>
+          </button>
+        </div>
+
+        <!-- Enhanced Sort Dropdown -->
+        <div class="sort-dropdown">
+          <button id="sortButton" class="sort-btn">
+            <span class="material-icons-round">sort</span>
+            <span class="sort-text">Sort</span>
+            <div class="sort-btn-glow"></div>
+          </button>
+          <div class="sort-options">
+            <button data-sort="updated" class="sort-option active">
+              <span class="sort-icon">🕒</span>
+              Last Updated
+            </button>
+            <button data-sort="created" class="sort-option">
+              <span class="sort-icon">📅</span>
+              Date Created
+            </button>
+            <button data-sort="title" class="sort-option">
+              <span class="sort-icon">🔤</span>
+              Title A-Z
+            </button>
+            <button data-sort="words" class="sort-option">
+              <span class="sort-icon">📊</span>
+              Word Count
+            </button>
+            <button data-sort="pinned" class="sort-option">
+              <span class="sort-icon">📌</span>
+              Pinned First
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Active Filters -->
+    <div class="active-filters" id="activeFilters">
+      <!-- Filter chips will be dynamically added here -->
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="notes-main">
+    <!-- Enhanced Tags Sidebar -->
+    <aside class="tags-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <h3>Tags</h3>
+          <div class="title-ornament">✨</div>
+        </div>
+        <button id="clearFilters" class="clear-btn">
+          Clear All
+          <div class="clear-btn-glow"></div>
+        </button>
+      </div>
+      
+      <!-- Tags Cloud -->
+      <div class="tags-cloud" id="tagsCloud">
+        <!-- Tags will be dynamically populated as cloud -->
+      </div>
+      
+      <!-- Sidebar Stats -->
+      <div class="sidebar-stats">
+        <div class="stat-item">
+          <div class="stat-icon">📝</div>
+          <div class="stat-info">
+            <div class="stat-value" id="totalNotesCount">0</div>
+            <div class="stat-label">Total Notes</div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">📌</div>
+          <div class="stat-info">
+            <div class="stat-value" id="pinnedNotesCount">0</div>
+            <div class="stat-label">Pinned</div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">🔖</div>
+          <div class="stat-info">
+            <div class="stat-value" id="totalTagsCount">0</div>
+            <div class="stat-label">Tags</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Enhanced Notes Container -->
+    <section class="notes-container">
+      <!-- Background Pattern for Empty Spaces -->
+      <div class="notes-bg-pattern">
+        <div class="pattern-circle circle-1"></div>
+        <div class="pattern-circle circle-2"></div>
+        <div class="pattern-circle circle-3"></div>
+        <div class="pattern-line line-1"></div>
+        <div class="pattern-line line-2"></div>
+      </div>
+      
+      <div class="notes-grid" id="notesGrid">
+        <!-- Notes will be dynamically rendered here -->
+      </div>
+
+      <!-- Enhanced Empty State -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-illustration">
+          <div class="floating-note">📝</div>
+          <div class="floating-pen">✏️</div>
+          <div class="floating-book">📚</div>
+          <div class="empty-glow"></div>
+          <div class="empty-particles"></div>
+        </div>
+        <h2>Your canvas is empty</h2>
+        <p>Start capturing your ideas and watch your knowledge garden grow</p>
+        <button id="createFirstNote" class="create-btn magnetic">
+          <span class="btn-glow"></span>
+          <span class="material-icons-round">add</span>
+          Plant Your First Idea
+        </button>
+        
+        <!-- Empty State Tips -->
+        <div class="empty-tips">
+          <div class="tip-card">
+            <div class="tip-icon">🚀</div>
+            <div class="tip-content">
+              <h4>Quick Start</h4>
+              <p>Press Ctrl+N to create a note instantly</p>
+            </div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">🏷️</div>
+            <div class="tip-content">
+              <h4>Stay Organized</h4>
+              <p>Use tags to categorize your notes</p>
+            </div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">📌</div>
+            <div class="tip-content">
+              <h4>Pin Important</h4>
+              <p>Pin frequently used notes to the top</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Enhanced Quick Actions Bar -->
+  <div class="quick-actions-bar">
+    <div class="actions-container">
+      <button id="quickNote" class="quick-action magnetic" title="Quick Note">
+        <span class="action-glow"></span>
+        <span class="action-particles"></span>
+        <span class="material-icons-round">note_add</span>
+        <div class="action-tooltip">Quick Note</div>
+      </button>
+      <button id="importNotes" class="quick-action magnetic" title="Import Notes">
+        <span class="action-glow"></span>
+        <span class="action-particles"></span>
+        <span class="material-icons-round">file_upload</span>
+        <div class="action-tooltip">Import</div>
+      </button>
+      <button id="exportNotes" class="quick-action magnetic" title="Export Notes">
+        <span class="action-glow"></span>
+        <span class="action-particles"></span>
+        <span class="material-icons-round">file_download</span>
+        <div class="action-tooltip">Export</div>
+      </button>
+      <button id="aiAssist" class="quick-action magnetic" title="AI Assist">
+        <span class="action-glow"></span>
+        <span class="action-particles"></span>
+        <span class="material-icons-round">auto_awesome</span>
+        <div class="action-tooltip">AI Assist</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Enhanced Note Editor Modal -->
+  <div id="noteEditor" class="editor-modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="editor-content">
+        <div class="editor-glow"></div>
+        <div class="editor-particles"></div>
+        
+        <!-- Editor Header -->
+        <div class="editor-header">
+          <div class="title-section">
+            <input 
+              id="noteTitle" 
+              type="text" 
+              placeholder="Note Title" 
+              class="title-input"
+            />
+            <div class="title-underline"></div>
+            <div class="title-particles"></div>
+          </div>
+          
+          <div class="editor-actions">
+            <!-- Save Button -->
+            <button id="manualSave" class="icon-btn save-btn" title="Save Note">
+              <span class="material-icons-round">save</span>
+              <div class="icon-glow"></div>
+            </button>
+            <button id="pinNote" class="icon-btn" title="Pin Note">
+              <span class="material-icons-round">push_pin</span>
+              <div class="icon-glow"></div>
+            </button>
+            <button id="toggleSecure" class="icon-btn" title="Make Secure">
+              <span class="material-icons-round">lock</span>
+              <div class="icon-glow"></div>
+            </button>
+            <button id="aiEnhance" class="icon-btn" title="AI Enhance">
+              <span class="material-icons-round">auto_awesome</span>
+              <div class="icon-glow"></div>
+            </button>
+            <button id="closeEditor" class="icon-btn close-btn" title="Close">
+              <span class="material-icons-round">close</span>
+              <div class="icon-glow"></div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Actions Bar -->
+        <div class="quick-editor-actions">
+          <!-- Font Color Picker -->
+          <div class="color-picker-container">
+            <label for="fontColor">Text Color:</label>
+            <input type="color" id="fontColor" class="color-picker" value="#1e293b">
+          </div>
+          
+          <!-- Image Upload -->
+          <div class="image-upload-container">
+            <input type="file" id="imageUpload" accept="image/*" class="image-upload-input" hidden>
+            <button type="button" id="uploadImageBtn" class="icon-btn" title="Upload Image">
+              <span class="material-icons-round">image</span>
+              Add Image
+            </button>
+          </div>
+          
+          <!-- Tag Input -->
+          <div class="tag-input-container">
+            <input 
+              type="text" 
+              id="quickTagInput" 
+              placeholder="Add tags..." 
+              class="quick-tag-input"
+            >
+            <button id="addTagBtn" class="icon-btn" title="Add Tag">
+              <span class="material-icons-round">local_offer</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Editor Body -->
+        <div class="editor-body">
+          <div class="editor-background">
+            <div class="editor-grid"></div>
+            <div class="editor-shapes">
+              <div class="editor-shape shape-1"></div>
+              <div class="editor-shape shape-2"></div>
+            </div>
+          </div>
+          
+          <div id="noteContent" class="content-editable" contenteditable="true">
+            Start writing your thoughts... Let your ideas flow freely across the digital canvas. Capture moments, insights, and inspiration as they come to you.
+          </div>
+          
+          <!-- Image Preview Container -->
+          <div id="imagePreviewContainer" class="image-preview-container"></div>
+          
+          <!-- Enhanced Formatting Toolbar -->
+          <div class="formatting-toolbar">
+            <div class="toolbar-section">
+              <button class="format-btn" data-format="bold" title="Bold">
+                <span class="material-icons-round">format_bold</span>
+              </button>
+              <button class="format-btn" data-format="italic" title="Italic">
+                <span class="material-icons-round">format_italic</span>
+              </button>
+              <button class="format-btn" data-format="underline" title="Underline">
+                <span class="material-icons-round">format_underlined</span>
+              </button>
+            </div>
+            <div class="toolbar-section">
+              <button class="format-btn" data-format="list" title="Bullet List">
+                <span class="material-icons-round">format_list_bulleted</span>
+              </button>
+              <button class="format-btn" data-format="numbers" title="Numbered List">
+                <span class="material-icons-round">format_list_numbered</span>
+              </button>
+              <button class="format-btn" data-format="code" title="Code Block">
+                <span class="material-icons-round">code</span>
+              </button>
+            </div>
+            <div class="toolbar-section">
+              <button class="format-btn" data-format="link" title="Add Link">
+                <span class="material-icons-round">link</span>
+              </button>
+              <button class="clear-format-btn" title="Clear Formatting">
+                <span class="material-icons-round">format_clear</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Editor Footer -->
+        <div class="editor-footer">
+          <div class="tags-section">
+            <div class="tags-input-container">
+              <input 
+                id="tagInput" 
+                type="text" 
+                placeholder="Add tags to organize..." 
+                class="tag-input"
+              />
+              <div class="tags-display" id="tagsDisplay"></div>
+              <div class="tags-suggestions" id="tagsSuggestions"></div>
+            </div>
+          </div>
+          
+          <div class="editor-stats">
+            <div class="stat">
+              <span class="material-icons-round">schedule</span>
+              <span id="lastSaved">Just now</span>
+            </div>
+            <div class="stat">
+              <span class="material-icons-round">text_fields</span>
+              <span id="wordCount">0 words</span>
+            </div>
+            <div class="stat">
+              <span class="material-icons-round">edit_note</span>
+              <span id="charCount">0 chars</span>
+            </div>
+            <div class="stat">
+              <span class="material-icons-round">auto_awesome</span>
+              <span id="readTime">0 min read</span>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button id="previewNote" class="secondary-btn magnetic">
+              <span class="material-icons-round">visibility</span>
+              Preview
+            </button>
+            <button id="deleteNote" class="danger-btn magnetic" title="Delete Note">
+              <span class="material-icons-round">delete</span>
+            </button>
+            <button id="saveNote" class="primary-btn magnetic">
+              <span class="btn-glow"></span>
+              <span class="material-icons-round">save</span>
+              Save Note
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Confirmation Modal -->
+  <div id="confirmModal" class="confirmation-modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="confirmation-content">
+        <div class="confirm-icon">⚠️</div>
+        <div class="confirm-glow"></div>
+        <h3 id="confirmTitle">Confirm Action</h3>
+        <p id="confirmMessage">Are you sure you want to proceed?</p>
+        <div class="confirm-actions">
+          <button id="confirmCancel" class="secondary-btn magnetic">
+            Cancel
+          </button>
+          <button id="confirmAction" class="danger-btn magnetic">
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Scroll Progress -->
+  <div class="scroll-progress">
+    <div class="scroll-bar">
+      <div class="scroll-glow"></div>
+    </div>
+  </div>
+
+  <!-- Enhanced Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-container">
+      <div class="loading-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-glow"></div>
+        <div class="spinner-particles"></div>
+      </div>
+      <p>Loading your creative space...</p>
+      <div class="loading-tips">
+        <span class="tip">Organizing your thoughts</span>
+        <span class="tip">Preparing your canvas</span>
+        <span class="tip">Loading inspiration</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Music Toggle -->
+  <div class="music-toggle">
+    <button id="musicBtn" class="music-btn" title="Background Music">
+      <span class="material-icons-round">music_note</span>
+      <div class="music-waves">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+      </div>
+    </button>
+  </div>
+  <script src="static/js/dataManager.js"></script>
+  <script src="static/js/notes.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progress | Scribbl</title>
+  <link rel="stylesheet" href="static/css/dashboard.css" />
+  <link rel="stylesheet" href="static/css/progress.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+  <!-- Enhanced Animated Background -->
+  <div class="animated-bg">
+    <div class="particles-container" id="particles"></div>
+    <div class="liquid-gradient"></div>
+    <div class="animated-grid"></div>
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="floating-note">📊</div>
+    <div class="floating-note">📈</div>
+    <div class="floating-note">🔍</div>
+    <div class="floating-note">🏆</div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="custom-cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- Loading Animation -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="loading-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <p>Loading your progress data...</p>
+    </div>
+  </div>
+
+  <!-- Export Success Animation -->
+  <div class="export-success" id="exportSuccess">
+    <div class="success-content">
+      <div class="success-icon">✅</div>
+      <p>Progress exported successfully!</p>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">✍️</div>
+      <h2 class="logo-text">Scribbl</h2>
+    </div>
+
+    <nav class="nav-links">
+      <button class="nav-item" onclick="window.location.href='dashboard.html'">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-text">Home</span>
+        <div class="nav-ripple"></div>
+      </button>
+      <button class="nav-item" onclick="window.location.href='notes.html'">
+        <span class="nav-icon">📝</span>
+        <span class="nav-text">Notes</span>
+        <div class="nav-ripple"></div>
+      </button>
+      <button class="nav-item" onclick="window.location.href='secure-notes.html'">
+        <span class="nav-icon">🔒</span>
+        <span class="nav-text">Secure Notes</span>
+        <div class="nav-ripple"></div>
+      </button>
+      <button class="nav-item active" data-section="progress">
+        <span class="nav-icon">📈</span>
+        <span class="nav-text">Progress</span>
+        <div class="nav-ripple"></div>
+      </button>
+      <button class="nav-item" onclick="window.location.href='history.html'">
+        <span class="nav-icon">📜</span>
+        <span class="nav-text">History</span>
+        <div class="nav-ripple"></div>
+      </button>
+      <button class="nav-item" onclick="window.location.href='settings.html'">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-text">Settings</span>
+        <div class="nav-ripple"></div>
+      </button>
+    </nav>
+
+    <div class="user-section">
+      <div class="user-info">
+        <div class="user-avatar">
+          <div class="avatar-glow"></div>
+          👤
+        </div>
+        <span class="username" id="username">User</span>
+      </div>
+      <button id="logoutBtn" class="logout-btn">
+        <span class="nav-icon">🚪</span>
+        <span class="nav-text">Logout</span>
+        <div class="button-ripple"></div>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="content">
+    <!-- Progress Section -->
+    <section id="progress" class="section active">
+      <!-- Progress Header -->
+      <div class="progress-header">
+        <div class="header-content">
+          <h1 class="progress-title">
+            <span class="gradient-text">Your Progress</span>
+          </h1>
+          <p class="progress-subtitle">Track your note-taking journey with detailed analytics</p>
+          
+          <div class="header-actions">
+            <button class="export-btn magnetic" id="exportPdfBtn">
+              <span class="btn-icon">📄</span>
+              Export PDF
+              <div class="button-ripple"></div>
+            </button>
+            <button class="share-btn magnetic" id="shareProgressBtn">
+              <span class="btn-icon">🔗</span>
+              Share
+              <div class="button-ripple"></div>
+            </button>
+          </div>
+        </div>
+        
+        <div class="progress-stats">
+          <div class="progress-stat-card" data-tilt>
+            <div class="stat-glow"></div>
+            <div class="stat-icon">📝</div>
+            <div class="stat-number" id="totalNotesProgress">0</div>
+            <div class="stat-label">Total Notes</div>
+            <div class="stat-trend" id="notesTrend">→</div>
+            <div class="stat-progress"></div>
+          </div>
+          <div class="progress-stat-card" data-tilt>
+            <div class="stat-glow"></div>
+            <div class="stat-icon">📅</div>
+            <div class="stat-number" id="streakDaysProgress">0</div>
+            <div class="stat-label">Day Streak</div>
+            <div class="stat-trend" id="streakTrend">→</div>
+            <div class="stat-progress"></div>
+          </div>
+          <div class="progress-stat-card" data-tilt>
+            <div class="stat-glow"></div>
+            <div class="stat-icon">📊</div>
+            <div class="stat-number" id="avgWordsProgress">0</div>
+            <div class="stat-label">Avg Words</div>
+            <div class="stat-trend" id="wordsTrend">→</div>
+            <div class="stat-progress"></div>
+          </div>
+          <div class="progress-stat-card" data-tilt>
+            <div class="stat-glow"></div>
+            <div class="stat-icon">🏷️</div>
+            <div class="stat-number" id="totalTagsProgress">0</div>
+            <div class="stat-label">Tags Used</div>
+            <div class="stat-trend" id="tagsTrend">→</div>
+            <div class="stat-progress"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Navigation -->
+      <div class="analytics-nav">
+        <button class="analytics-nav-btn active" data-section="overview">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">Overview</span>
+        </button>
+        <button class="analytics-nav-btn" data-section="charts">
+          <span class="nav-icon">📈</span>
+          <span class="nav-text">Charts</span>
+        </button>
+        <button class="analytics-nav-btn" data-section="habits">
+          <span class="nav-icon">🔥</span>
+          <span class="nav-text">Habits</span>
+        </button>
+        <button class="analytics-nav-btn" data-section="insights">
+          <span class="nav-icon">💡</span>
+          <span class="nav-text">Insights</span>
+        </button>
+        <button class="analytics-nav-btn" data-section="export">
+          <span class="nav-icon">📤</span>
+          <span class="nav-text">Export</span>
+        </button>
+      </div>
+
+      <!-- Analytics Content -->
+      <div class="analytics-content">
+        <!-- Overview Section -->
+        <div id="overview" class="analytics-section active">
+          <div class="analytics-grid">
+            <div class="analytics-card large" data-chart-type="activity">
+              <div class="card-header">
+                <h3>Activity Overview</h3>
+                <div class="time-filter">
+                  <select id="timeFilter">
+                    <option value="7">Last 7 days</option>
+                    <option value="30" selected>Last 30 days</option>
+                    <option value="90">Last 90 days</option>
+                    <option value="365">Last year</option>
+                    <option value="custom">Custom Range</option>
+                  </select>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="activityChart"></canvas>
+              </div>
+              <div class="chart-actions">
+                <button class="chart-action-btn" data-action="fullscreen">🔍</button>
+                <button class="chart-action-btn" data-action="export">📥</button>
+              </div>
+            </div>
+            
+            <div class="analytics-card" data-chart-type="noteTypes">
+              <div class="card-header">
+                <h3>Note Types</h3>
+              </div>
+              <div class="chart-container">
+                <canvas id="noteTypesChart"></canvas>
+              </div>
+              <div class="chart-actions">
+                <button class="chart-action-btn" data-action="fullscreen">🔍</button>
+              </div>
+            </div>
+            
+            <div class="analytics-card">
+              <div class="card-header">
+                <h3>Productivity</h3>
+              </div>
+              <div class="productivity-stats">
+                <div class="productivity-item">
+                  <div class="productivity-icon">📅</div>
+                  <div class="productivity-info">
+                    <div class="productivity-value" id="notesThisWeek">0</div>
+                    <div class="productivity-label">This Week</div>
+                    <div class="productivity-trend up">+12%</div>
+                  </div>
+                </div>
+                <div class="productivity-item">
+                  <div class="productivity-icon">📝</div>
+                  <div class="productivity-info">
+                    <div class="productivity-value" id="avgNotesPerDay">0</div>
+                    <div class="productivity-label">Avg/Day</div>
+                    <div class="productivity-trend up">+5%</div>
+                  </div>
+                </div>
+                <div class="productivity-item">
+                  <div class="productivity-icon">⏱️</div>
+                  <div class="productivity-info">
+                    <div class="productivity-value" id="mostActiveDay">-</div>
+                    <div class="productivity-label">Most Active</div>
+                    <div class="productivity-trend neutral">→</div>
+                  </div>
+                </div>
+                <div class="productivity-item">
+                  <div class="productivity-icon">🕒</div>
+                  <div class="productivity-info">
+                    <div class="productivity-value" id="mostActiveHour">-</div>
+                    <div class="productivity-label">Peak Hour</div>
+                    <div class="productivity-trend neutral">→</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="analytics-card">
+              <div class="card-header">
+                <h3>Top Tags</h3>
+              </div>
+              <div class="tags-list" id="topTagsList">
+                <!-- Tags will be populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div id="charts" class="analytics-section">
+          <div class="charts-grid" id="chartsGrid">
+            <!-- Charts will be loaded dynamically -->
+          </div>
+        </div>
+
+        <!-- Habits Section -->
+        <div id="habits" class="analytics-section">
+          <div class="habits-container">
+            <div class="habit-card">
+              <div class="habit-header">
+                <h3>Writing Streak</h3>
+                <div class="streak-count" id="currentStreak">0 days</div>
+              </div>
+              <div class="streak-calendar" id="streakCalendar">
+                <!-- Calendar will be populated dynamically -->
+              </div>
+              <div class="streak-info">
+                <div class="streak-stat">
+                  <span class="stat-value" id="longestStreak">0</span>
+                  <span class="stat-label">Longest Streak</span>
+                </div>
+                <div class="streak-stat">
+                  <span class="stat-value" id="totalActiveDays">0</span>
+                  <span class="stat-label">Total Active Days</span>
+                </div>
+              </div>
+              <div class="habit-tip">
+                <strong>Tip:</strong> Write at least one note every day to maintain your streak!
+              </div>
+            </div>
+            
+            <div class="habit-card">
+              <div class="habit-header">
+                <h3>Weekly Goals</h3>
+                <div class="goal-progress">
+                  <span id="goalsCompleted">0</span>/<span id="totalGoals">5</span>
+                </div>
+              </div>
+              <div class="goals-list">
+                <div class="goal-item">
+                  <input type="checkbox" id="goal1" class="goal-checkbox">
+                  <label for="goal1">Write 5 notes this week</label>
+                  <div class="goal-progress-bar">
+                    <div class="goal-progress-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+                <div class="goal-item">
+                  <input type="checkbox" id="goal2" class="goal-checkbox">
+                  <label for="goal2">Create 2 secure notes</label>
+                  <div class="goal-progress-bar">
+                    <div class="goal-progress-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+                <div class="goal-item">
+                  <input type="checkbox" id="goal3" class="goal-checkbox">
+                  <label for="goal3">Use 3 different tags</label>
+                  <div class="goal-progress-bar">
+                    <div class="goal-progress-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+                <div class="goal-item">
+                  <input type="checkbox" id="goal4" class="goal-checkbox">
+                  <label for="goal4">Maintain 7-day streak</label>
+                  <div class="goal-progress-bar">
+                    <div class="goal-progress-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+                <div class="goal-item">
+                  <input type="checkbox" id="goal5" class="goal-checkbox">
+                  <label for="goal5">Write 1000+ words</label>
+                  <div class="goal-progress-bar">
+                    <div class="goal-progress-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="goals-actions">
+                <button class="goal-reset-btn" id="resetGoalsBtn">Reset Goals</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Insights Section -->
+        <div id="insights" class="analytics-section">
+          <div class="insights-container">
+            <div class="insight-card">
+              <div class="insight-icon">💡</div>
+              <h3>Your Writing Pattern</h3>
+              <p id="writingPattern">Based on your activity, you tend to write more notes in the evening. Try setting aside morning time for creative writing!</p>
+              <div class="insight-metrics">
+                <div class="metric">
+                  <span class="metric-value" id="patternStrength">75%</span>
+                  <span class="metric-label">Pattern Strength</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="insight-card">
+              <div class="insight-icon">📅</div>
+              <h3>Consistency Score</h3>
+              <div class="score-display">
+                <div class="score-circle">
+                  <div class="score-value" id="consistencyScore">75%</div>
+                </div>
+                <p id="consistencyFeedback">You're consistent with your note-taking habits. Keep it up!</p>
+              </div>
+            </div>
+            
+            <div class="insight-card">
+              <div class="insight-icon">🏆</div>
+              <h3>Achievements</h3>
+              <div class="achievements-list" id="achievementsList">
+                <!-- Achievements will be populated dynamically -->
+              </div>
+              <div class="achievements-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" id="achievementsProgress" style="width: 0%"></div>
+                </div>
+                <span class="progress-text" id="achievementsText">0/15 unlocked</span>
+              </div>
+            </div>
+
+            <div class="insight-card">
+              <div class="insight-icon">🔮</div>
+              <h3>Predictive Analytics</h3>
+              <div class="prediction-content">
+                <div class="prediction-item">
+                  <div class="prediction-icon">📈</div>
+                  <div class="prediction-info">
+                    <div class="prediction-value" id="predictedNotes">0</div>
+                    <div class="prediction-label">Predicted notes this month</div>
+                  </div>
+                </div>
+                <div class="prediction-item">
+                  <div class="prediction-icon">🎯</div>
+                  <div class="prediction-info">
+                    <div class="prediction-value" id="completionRate">0%</div>
+                    <div class="prediction-label">Goal completion rate</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Export Section -->
+        <div id="export" class="analytics-section">
+          <div class="export-container">
+            <div class="export-card">
+              <div class="export-header">
+                <h3>Export Your Data</h3>
+                <p>Download your progress data in various formats</p>
+              </div>
+              
+              <div class="export-options">
+                <div class="export-option" data-format="pdf">
+                  <div class="option-icon">📄</div>
+                  <div class="option-info">
+                    <h4>PDF Report</h4>
+                    <p>Beautiful formatted report with charts</p>
+                  </div>
+                  <button class="option-btn" data-format="pdf">Export</button>
+                </div>
+                
+                <div class="export-option" data-format="csv">
+                  <div class="option-icon">📊</div>
+                  <div class="option-info">
+                    <h4>CSV Data</h4>
+                    <p>Raw data for analysis in spreadsheets</p>
+                  </div>
+                  <button class="option-btn" data-format="csv">Export</button>
+                </div>
+                
+                <div class="export-option" data-format="json">
+                  <div class="option-icon">🔧</div>
+                  <div class="option-info">
+                    <h4>JSON Backup</h4>
+                    <p>Complete data backup format</p>
+                  </div>
+                  <button class="option-btn" data-format="json">Export</button>
+                </div>
+                
+                <div class="export-option" data-format="image">
+                  <div class="option-icon">🖼️</div>
+                  <div class="option-info">
+                    <h4>Charts as Images</h4>
+                    <p>Individual charts as PNG images</p>
+                  </div>
+                  <button class="option-btn" data-format="image">Export</button>
+                </div>
+              </div>
+              
+              <div class="export-settings">
+                <h4>Export Settings</h4>
+                <div class="settings-grid">
+                  <label class="setting-option">
+                    <input type="checkbox" id="includeCharts" checked>
+                    <span class="checkmark"></span>
+                    Include Charts
+                  </label>
+                  <label class="setting-option">
+                    <input type="checkbox" id="includeRawData" checked>
+                    <span class="checkmark"></span>
+                    Include Raw Data
+                  </label>
+                  <label class="setting-option">
+                    <input type="checkbox" id="includeInsights" checked>
+                    <span class="checkmark"></span>
+                    Include Insights
+                  </label>
+                  <label class="setting-option">
+                    <input type="checkbox" id="anonymizeData">
+                    <span class="checkmark"></span>
+                    Anonymize Data
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="export-preview">
+              <h4>Preview</h4>
+              <div class="preview-content" id="exportPreview">
+                <div class="preview-placeholder">
+                  <div class="preview-icon">👁️</div>
+                  <p>Select export options to see preview</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Custom Date Range Modal -->
+  <div id="dateRangeModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="modal-content" data-tilt>
+        <div class="modal-glow"></div>
+        <h2 class="modal-title">Custom Date Range</h2>
+        <div class="input-group">
+          <label for="startDate">Start Date</label>
+          <input type="date" id="startDate">
+        </div>
+        <div class="input-group">
+          <label for="endDate">End Date</label>
+          <input type="date" id="endDate">
+        </div>
+        <div class="modal-actions">
+          <button id="applyDateRange" class="primary-btn magnetic">
+            <span class="btn-glow"></span>
+            Apply Range
+            <div class="button-ripple"></div>
+          </button>
+          <button id="cancelDateRange" class="secondary-btn magnetic">
+            Cancel
+            <div class="button-ripple"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Fullscreen Modal -->
+  <div id="fullscreenModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container fullscreen">
+      <div class="modal-content fullscreen-content">
+        <div class="fullscreen-header">
+          <h3 id="fullscreenChartTitle">Chart</h3>
+          <button id="closeFullscreen" class="close-btn">×</button>
+        </div>
+        <div class="fullscreen-body" id="fullscreenChartContainer">
+          <!-- Chart will be rendered here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share Progress Modal -->
+  <div id="shareModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="modal-content" data-tilt>
+        <div class="modal-glow"></div>
+        <h2 class="modal-title">Share Progress</h2>
+        <div class="share-options">
+          <button class="share-option magnetic" data-platform="link">
+            <span class="share-icon">🔗</span>
+            <span class="share-text">Copy Link</span>
+          </button>
+          <button class="share-option magnetic" data-platform="twitter">
+            <span class="share-icon">🐦</span>
+            <span class="share-text">Twitter</span>
+          </button>
+          <button class="share-option magnetic" data-platform="image">
+            <span class="share-icon">🖼️</span>
+            <span class="share-text">Share Image</span>
+          </button>
+        </div>
+        <div class="share-preview">
+          <div class="preview-card">
+            <div class="preview-stats">
+              <div class="preview-stat">
+                <span class="stat-number" id="previewNotes">0</span>
+                <span class="stat-label">Notes</span>
+              </div>
+              <div class="preview-stat">
+                <span class="stat-number" id="previewStreak">0</span>
+                <span class="stat-label">Day Streak</span>
+              </div>
+            </div>
+            <p>Check out my progress on Scribbl! ✍️</p>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button id="closeShare" class="secondary-btn magnetic">
+            Close
+            <div class="button-ripple"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme Toggle -->
+  <div class="theme-toggle">
+    <input type="checkbox" id="themeSwitch" class="theme-checkbox" />
+    <label for="themeSwitch" class="theme-label">
+      <div class="theme-handle"></div>
+      <div class="theme-icons">
+        <span class="theme-icon sun">☀️</span>
+        <span class="theme-icon moon">🌙</span>
+      </div>
+    </label>
+  </div>
+
+  <!-- Confetti Animation Container -->
+  <div id="confettiContainer"></div>
+
+  <script src="static/js/dashboard.js"></script>
+  <script src="static/js/progress.js"></script>
+</body>
+</html>

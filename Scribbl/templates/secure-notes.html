@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secure Notes | Scribbl</title>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="static/css/dashboard.css" />
+  <link rel="stylesheet" href="static/css/secure.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Enhanced Security Background -->
+  <div class="security-bg">
+    <div class="encryption-particles"></div>
+    <div class="security-grid"></div>
+    <div class="floating-lock">🔒</div>
+    <div class="floating-shield">🛡️</div>
+    <div class="floating-key">🔑</div>
+    <div class="security-wave"></div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">✍️</div>
+      <h2 class="logo-text">Scribbl</h2>
+    </div>
+
+    <nav class="nav-links">
+      <button class="nav-item" onclick="window.location.href='dashboard.html'">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-text">Home</span>
+      </button>
+      <button class="nav-item" onclick="window.location.href='notes.html'">
+        <span class="nav-icon">📝</span>
+        <span class="nav-text">Notes</span>
+      </button>
+      <button class="nav-item active" onclick="window.location.href='secure-notes.html'">
+        <span class="nav-icon">🔒</span>
+        <span class="nav-text">Secure Notes</span>
+      </button>
+      <button class="nav-item" onclick="window.location.href='progress.html'">
+        <span class="nav-icon">📈</span>
+        <span class="nav-text">Progress</span>
+      </button>
+      <button class="nav-item" onclick="window.location.href='history.html'">
+        <span class="nav-icon">📜</span>
+        <span class="nav-text">History</span>
+      </button>
+      <button class="nav-item" onclick="window.location.href='settings.html'">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-text">Settings</span>
+      </button>
+    </nav>
+
+    <div class="user-section">
+      <div class="user-info">
+        <div class="user-avatar">
+          <div class="avatar-glow"></div>
+          👤
+        </div>
+        <span class="username" id="username">User</span>
+      </div>
+      <button id="logoutBtn" class="logout-btn">
+        <span class="nav-icon">🚪</span>
+        <span class="nav-text">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="content">
+    <section id="secure-notes-view" class="section active">
+      <!-- Header -->
+      <div class="secure-header">
+        <div class="header-content">
+          <h1 class="secure-title">
+            <span class="security-icon">🔒</span>
+            Secure Vault
+          </h1>
+          <p class="secure-subtitle">Military-grade encryption with multiple security layers</p>
+          
+          <div class="security-badges">
+            <div class="security-badge">
+              <span class="badge-icon">🛡️</span>
+              <span>AES-256 Encryption</span>
+            </div>
+            <div class="security-badge">
+              <span class="badge-icon">🔐</span>
+              <span>Pattern/PIN Lock</span>
+            </div>
+            <div class="security-badge">
+              <span class="badge-icon">⚡</span>
+              <span>Auto-Lock</span>
+            </div>
+          </div>
+        </div>
+        <button id="newSecureNoteBtn" class="security-btn primary">
+          <span class="btn-glow"></span>
+          <span class="btn-icon">+</span>
+          New Secure Note
+        </button>
+      </div>
+
+      <!-- Security Dashboard -->
+      <div class="security-dashboard">
+        <div class="dashboard-card">
+          <div class="card-icon">📊</div>
+          <div class="card-content">
+            <h3>Security Status</h3>
+            <div class="security-metrics">
+              <div class="metric">
+                <span class="metric-value" id="totalSecureNotes">0</span>
+                <span class="metric-label">Secure Notes</span>
+              </div>
+              <div class="metric">
+                <span class="metric-value" id="lockedNotes">0</span>
+                <span class="metric-label">Locked</span>
+              </div>
+              <div class="metric">
+                <span class="metric-value" id="securityLevel">High</span>
+                <span class="metric-label">Security Level</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-icon">⏰</div>
+          <div class="card-content">
+            <h3>Auto-Lock Settings</h3>
+            <div class="lock-timer">
+              <select id="autoLockTimer" class="timer-select">
+                <option value="1">1 minute</option>
+                <option value="5" selected>5 minutes</option>
+                <option value="15">15 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="0">Never</option>
+              </select>
+              <button id="lockNowBtn" class="security-btn secondary">
+                🔒 Lock Now
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-icon">🚨</div>
+          <div class="card-content">
+            <h3>Security Monitor</h3>
+            <div class="security-monitor">
+              <div class="monitor-item">
+                <span class="monitor-label">Last Access</span>
+                <span class="monitor-value" id="lastAccess">Just now</span>
+              </div>
+              <div class="monitor-item">
+                <span class="monitor-label">Failed Attempts</span>
+                <span class="monitor-value" id="failedAttempts">0</span>
+              </div>
+              <div class="monitor-item">
+                <span class="monitor-label">Active Sessions</span>
+                <span class="monitor-value" id="activeSessions">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes Grid -->
+      <div class="secure-notes-container">
+        <div class="notes-header">
+          <h2>Your Secure Notes</h2>
+          <div class="notes-controls">
+            <div class="view-toggle">
+              <button class="view-btn active" data-view="grid">🟦 Grid</button>
+              <button class="view-btn" data-view="list">📋 List</button>
+            </div>
+            <div class="search-box">
+              <input type="text" id="secureSearch" placeholder="🔍 Search secure notes..." />
+            </div>
+            <div class="notes-stats">
+              <span class="stat" id="secureNotesCount">0 notes</span>
+              <span class="stat" id="encryptedSize">0 KB encrypted</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="secure-notes-grid" id="secureNoteList">
+          <!-- Secure notes will be dynamically loaded here -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-secure-state" id="emptySecureState">
+          <div class="empty-icon">🔒</div>
+          <h3>Your Secure Vault is Empty</h3>
+          <p>Create your first encrypted note with enhanced security features</p>
+          <button class="security-btn primary" onclick="secureManager.openSecurityMethodModal()">
+            🛡️ Create Secure Note
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Security Method Selection Modal -->
+  <div id="securityMethodModal" class="security-modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="security-modal-content">
+        <div class="modal-header">
+          <div class="modal-title">
+            <span class="title-icon">🛡️</span>
+            <h2>Choose Security Method</h2>
+          </div>
+          <button class="close-modal-btn" id="closeMethodModal">
+            <span>×</span>
+          </button>
+        </div>
+
+        <div class="security-methods">
+          <div class="method-card" data-method="pattern">
+            <div class="method-icon">🔷</div>
+            <h3>Pattern Lock</h3>
+            <p>Draw a unique pattern on 4x4 grid</p>
+            <div class="method-features">
+              <span>★ More Secure</span>
+              <span>★ Harder to Guess</span>
+            </div>
+          </div>
+
+          <div class="method-card" data-method="pin">
+            <div class="method-icon">🔢</div>
+            <h3>4-Digit PIN</h3>
+            <p>Enter a 4-digit personal code</p>
+            <div class="method-features">
+              <span>★ Quick Access</span>
+              <span>★ Easy to Remember</span>
+            </div>
+          </div>
+
+          <div class="method-card" data-method="password">
+            <div class="method-icon">🔑</div>
+            <h3>Custom Password</h3>
+            <p>Create your own secure password</p>
+            <div class="method-features">
+              <span>★ Most Secure</span>
+              <span>★ Fully Customizable</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-actions">
+          <button class="security-btn secondary" id="cancelMethod">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pattern Lock Setup Modal -->
+  <div id="patternLockModal" class="security-modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="pattern-modal-content">
+        <div class="modal-header">
+          <div class="modal-title">
+            <span class="title-icon">🔷</span>
+            <h2>Set Pattern Lock</h2>
+          </div>
+        </div>
+
+        <div class="pattern-setup">
+          <div class="pattern-instructions">
+            <p>Draw your security pattern on the grid below</p>
+            <p class="instruction-hint">Connect at least 4 dots for better security</p>
+          </div>
+
+          <div class="pattern-container">
+            <div class="pattern-grid" id="patternGrid">
+              <!-- 4x4 grid will be generated here -->
+            </div>
+            <div class="pattern-feedback">
+              <div class="pattern-strength">
+                <span class="strength-label">Strength:</span>
+                <div class="strength-meter">
+                  <div class="strength-bar" id="patternStrengthBar"></div>
+                </div>
+                <span class="strength-text" id="patternStrengthText">Weak</span>
+              </div>
+              <div class="pattern-hint" id="patternHint">
+                Draw your pattern
+              </div>
+            </div>
+          </div>
+
+          <div class="pattern-actions">
+            <button class="security-btn secondary" id="resetPattern">
+              🔄 Redraw
+            </button>
+            <button class="security-btn secondary" id="backToMethods">
+              ← Back
+            </button>
+            <button class="security-btn primary" id="confirmPattern" disabled>
+              🔒 Confirm Pattern
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIN Setup Modal -->
+  <div id="pinSetupModal" class="security-modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="pin-modal-content">
+        <div class="modal-header">
+          <div class="modal-title">
+            <span class="title-icon">🔢</span>
+            <h2>Set 4-Digit PIN</h2>
+          </div>
+        </div>
+
+        <div class="pin-setup">
+          <div class="pin-instructions">
+            <p>Enter your 4-digit security code using keyboard</p>
+            <p class="instruction-hint">Don't use obvious sequences like 1234</p>
+          </div>
+
+          <div class="pin-input-field">
+            <input type="text" id="pinTextInput" class="pin-text-input" placeholder="Enter 4-digit PIN" maxlength="4" inputmode="numeric" />
+            <div class="pin-feedback" id="pinFeedback"></div>
+          </div>
+
+          <div class="pin-actions">
+            <button class="security-btn secondary" id="backToMethodsPin">
+              ← Back
+            </button>
+            <button class="security-btn primary" id="confirmPin" disabled>
+              🔒 Confirm PIN
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Setup Modal -->
+  <div id="passwordSetupModal" class="security-modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="password-modal-content">
+        <div class="modal-header">
+          <div class="modal-title">
+            <span class="title-icon">🔑</span>
+            <h2>Set Custom Password</h2>
+          </div>
+        </div>
+
+        <div class="password-setup">
+          <div class="password-instructions">
+            <p>Create your secure password</p>
+            <p class="instruction-hint">Use at least 6 characters for better security</p>
+          </div>
+
+          <div class="password-input-field">
+            <div class="input-group">
+              <input type="password" id="passwordInput" placeholder=" " />
+              <label for="passwordInput">Enter Password</label>
+              <div class="input-underline"></div>
+            </div>
+            <div class="input-group">
+              <input type="password" id="confirmPasswordInput" placeholder=" " />
+              <label for="confirmPasswordInput">Confirm Password</label>
+              <div class="input-underline"></div>
+            </div>
+            <div class="password-feedback" id="passwordFeedback"></div>
+          </div>
+
+          <div class="password-actions">
+            <button class="security-btn secondary" id="backToMethodsPassword">
+              ← Back
+            </button>
+            <button class="security-btn primary" id="confirmPassword" disabled>
+              🔒 Confirm Password
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secure Note Editor Modal -->
+  <div id="secureNoteModal" class="security-modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="security-modal-content large">
+        <div class="modal-header">
+          <div class="modal-title">
+            <span class="title-icon">📝</span>
+            <h2 id="modalTitle">New Secure Note</h2>
+          </div>
+          <button class="close-modal-btn" id="closeSecureModal">
+            <span>×</span>
+          </button>
+        </div>
+
+        <form id="secureNoteForm" class="secure-form">
+          <div class="input-group">
+            <input type="text" id="secureTitle" placeholder=" " maxlength="100" />
+            <label for="secureTitle">Note Title</label>
+            <div class="input-underline"></div>
+            <div class="char-count">
+              <span id="titleCharCount">0</span>/100
+            </div>
+          </div>
+
+          <div class="input-group">
+            <textarea id="secureContent" placeholder=" " rows="12" maxlength="10000"></textarea>
+            <label for="secureContent">Your secure content</label>
+            <div class="input-underline"></div>
+            <div class="char-count">
+              <span id="contentCharCount">0</span>/10000
+            </div>
+          </div>
+
+          <div class="security-features">
+            <div class="security-badge large">
+              <span class="badge-icon">🔒</span>
+              <span>End-to-End Encrypted • Secure Storage</span>
+            </div>
+            <div class="security-badge large">
+              <span class="badge-icon" id="methodIcon">🔷</span>
+              <span id="securityMethodText">Pattern Protected</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="security-btn secondary" id="cancelSecureNote">
+              Cancel
+            </button>
+            <button type="submit" class="security-btn primary" id="saveSecureNote">
+              <span class="btn-icon">💾</span>
+              Save Secure Note
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unlock Modal -->
+  <div id="unlockModal" class="security-modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="unlock-modal-content">
+        <div class="unlock-header">
+          <div class="unlock-icon">🔒</div>
+          <h3>Unlock Secure Note</h3>
+          <p id="unlockMethodText">Enter your security pattern to view this note</p>
+        </div>
+        
+        <div class="unlock-content">
+          <!-- Dynamic content based on security method -->
+          <div id="patternUnlockContainer" class="unlock-container hidden">
+            <div class="pattern-grid unlock-grid" id="patternUnlockGrid"></div>
+            <div class="unlock-feedback" id="patternUnlockFeedback"></div>
+          </div>
+
+          <div id="pinUnlockContainer" class="unlock-container hidden">
+            <div class="pin-input-field">
+              <input type="text" id="pinTextUnlock" class="pin-text-unlock" placeholder="Enter 4-digit PIN" maxlength="4" inputmode="numeric" />
+              <div class="unlock-feedback" id="pinUnlockFeedback"></div>
+            </div>
+          </div>
+
+          <div id="passwordUnlockContainer" class="unlock-container hidden">
+            <div class="password-input-field">
+              <div class="input-group">
+                <input type="password" id="passwordUnlockInput" placeholder="Enter your password" />
+                <div class="input-underline"></div>
+              </div>
+              <div class="unlock-feedback" id="passwordUnlockFeedback"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="unlock-actions">
+          <button class="security-btn secondary" id="cancelUnlock">
+            Cancel
+          </button>
+          <button class="security-btn primary" id="confirmUnlock">
+            Unlock Note
+          </button>
+        </div>
+
+        <div class="security-warning">
+          <span class="warning-icon">⚠️</span>
+          <span>Too many failed attempts will lock the vault temporarily</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Note Viewer Modal -->
+  <div id="noteViewerModal" class="security-modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="security-modal-content large">
+        <div class="modal-header">
+          <div class="modal-title">
+            <span class="title-icon">📖</span>
+            <h2 id="viewerTitle">Secure Note</h2>
+            <div class="viewer-actions">
+              <button class="security-btn secondary small" id="editNoteBtn">
+                ✏️ Edit
+              </button>
+              <button class="security-btn secondary small" id="copyContentBtn">
+                📋 Copy
+              </button>
+              <button class="security-btn secondary small" id="lockNoteBtn">
+                🔒 Relock
+              </button>
+            </div>
+          </div>
+          <button class="close-modal-btn" id="closeViewerModal">
+            <span>×</span>
+          </button>
+        </div>
+
+        <div class="note-viewer-content">
+          <div class="note-meta-info">
+            <span class="meta-item">Created: <span id="viewerCreatedDate"></span></span>
+            <span class="meta-item">Last modified: <span id="viewerModifiedDate"></span></span>
+            <span class="meta-item">Security: <span id="viewerSecurityMethod"></span></span>
+          </div>
+          
+          <div class="note-content-viewer">
+            <pre id="noteContentView"><code id="noteContentText"></code></pre>
+          </div>
+        </div>
+
+        <div class="viewer-actions-bottom">
+          <button class="security-btn secondary" id="closeViewer">
+            Close
+          </button>
+          <button class="security-btn primary" id="exportNoteBtn">
+            📤 Export Note
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Note Editor Modal -->
+  <div id="noteEditorModal" class="security-modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="security-modal-content large">
+        <div class="modal-header">
+          <div class="modal-title">
+            <span class="title-icon">✏️</span>
+            <h2>Edit Secure Note</h2>
+          </div>
+          <button class="close-modal-btn" id="closeEditorModal">
+            <span>×</span>
+          </button>
+        </div>
+
+        <form id="noteEditorForm" class="secure-form">
+          <div class="input-group">
+            <input type="text" id="editTitle" placeholder=" " maxlength="100" />
+            <label for="editTitle">Note Title</label>
+            <div class="input-underline"></div>
+            <div class="char-count">
+              <span id="editTitleCharCount">0</span>/100
+            </div>
+          </div>
+
+          <div class="input-group">
+            <textarea id="editContent" placeholder=" " rows="12" maxlength="10000"></textarea>
+            <label for="editContent">Note Content</label>
+            <div class="input-underline"></div>
+            <div class="char-count">
+              <span id="editContentCharCount">0</span>/10000
+            </div>
+          </div>
+
+          <div class="security-features">
+            <div class="security-badge large">
+              <span class="badge-icon">🔒</span>
+              <span>Editing Secure Content</span>
+            </div>
+            <div class="security-badge large warning">
+              <span class="badge-icon">⏰</span>
+              <span>Auto-save disabled for security</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="security-btn secondary" id="cancelEdit">
+              Cancel
+            </button>
+            <button type="button" class="security-btn secondary" id="revertEdit">
+              🔄 Revert
+            </button>
+            <button type="submit" class="security-btn primary" id="saveEditedNote">
+              💾 Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Session Manager -->
+  <div class="session-indicator" id="sessionIndicator">
+    <div class="session-timer">
+      <span class="timer-icon">⏰</span>
+      <span class="timer-text" id="sessionTimer">05:00</span>
+    </div>
+    <div class="session-notes">
+      <span class="notes-count" id="unlockedNotesCount">0 unlocked</span>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="security-quick-actions">
+    <button class="quick-action" id="lockAllBtn" title="Lock All Notes">
+      <span class="action-icon">🔒</span>
+    </button>
+    <button class="quick-action" id="exportSecureBtn" title="Export Secure Notes">
+      <span class="action-icon">📤</span>
+    </button>
+    <button class="quick-action" id="securitySettingsBtn" title="Security Settings">
+      <span class="action-icon">⚙️</span>
+    </button>
+  </div>
+  <script src="static/js/dataManager.js"></script>
+  <script src="static/js/secure.js"></script>
+</body>
+</html>

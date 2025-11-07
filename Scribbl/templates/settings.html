@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings - Scribbl</title>
+  <link rel="stylesheet" href="static/css/settings.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="settings-page">
+  <!-- Background -->
+  <div class="settings-bg">
+    <div class="bg-particles"></div>
+    <div class="bg-gradient"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="settings-header">
+    <div class="header-content">
+      <button class="back-btn" onclick="window.history.back()">
+        <span class="back-icon">←</span>
+        Back
+      </button>
+      <h1 class="settings-title">Settings</h1>
+      <div class="header-actions">
+        <button class="help-btn" id="helpBtn" title="Help">
+          <span>?</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="settings-main">
+    <!-- Navigation -->
+    <nav class="settings-nav" role="navigation" aria-label="Settings sections">
+      <div class="nav-section">
+        <h3 class="nav-section-title">Preferences</h3>
+        <button class="nav-item active" data-panel="appearance">
+          <span class="nav-icon">🎨</span>
+          <span class="nav-text">Appearance</span>
+          <div class="nav-indicator"></div>
+        </button>
+        <button class="nav-item" data-panel="editor">
+          <span class="nav-icon">✏️</span>
+          <span class="nav-text">Editor</span>
+          <div class="nav-indicator"></div>
+        </button>
+        <button class="nav-item" data-panel="behavior">
+          <span class="nav-icon">⚡</span>
+          <span class="nav-text">Behavior</span>
+          <div class="nav-indicator"></div>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Settings Panels -->
+    <div class="settings-panels">
+      <!-- Appearance Panel -->
+      <section id="appearance" class="settings-panel active" role="region" aria-labelledby="appearance-title">
+        <div class="panel-header">
+          <h2 id="appearance-title" class="panel-title">Appearance</h2>
+          <p class="panel-subtitle">Customize how Scribbl looks and feels</p>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Theme</h3>
+          <div class="theme-selector">
+            <div class="theme-option" data-theme="auto">
+              <div class="theme-preview auto-theme">
+                <div class="theme-half light-half"></div>
+                <div class="theme-half dark-half"></div>
+              </div>
+              <span class="theme-label">Auto</span>
+              <input type="radio" name="theme" value="auto" checked>
+            </div>
+            <div class="theme-option" data-theme="light">
+              <div class="theme-preview light-theme"></div>
+              <span class="theme-label">Light</span>
+              <input type="radio" name="theme" value="light">
+            </div>
+            <div class="theme-option" data-theme="dark">
+              <div class="theme-preview dark-theme"></div>
+              <span class="theme-label">Dark</span>
+              <input type="radio" name="theme" value="dark">
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Font & Layout</h3>
+          <div class="setting-row">
+            <label for="fontScale" class="setting-label">
+              <span>Font Scale</span>
+              <span id="fontScaleValue" class="setting-value">100%</span>
+            </label>
+            <input type="range" id="fontScale" min="0.8" max="1.5" step="0.05" value="1" class="slider">
+          </div>
+
+          <div class="setting-row">
+            <label for="layoutSelect" class="setting-label">Default Layout</label>
+            <select id="layoutSelect" class="setting-select">
+              <option value="grid">Grid View</option>
+              <option value="list">List View</option>
+              <option value="compact">Compact View</option>
+            </select>
+          </div>
+
+          <div class="setting-row">
+            <label for="densitySelect" class="setting-label">UI Density</label>
+            <select id="densitySelect" class="setting-select">
+              <option value="comfortable">Comfortable</option>
+              <option value="normal">Normal</option>
+              <option value="compact">Compact</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Accent Color</h3>
+          <div class="color-picker">
+            <div class="color-option active" data-color="#5b5fe9" style="background: #5b5fe9;"></div>
+            <div class="color-option" data-color="#10b981" style="background: #10b981;"></div>
+            <div class="color-option" data-color="#f59e0b" style="background: #f59e0b;"></div>
+            <div class="color-option" data-color="#ef4444" style="background: #ef4444;"></div>
+            <div class="color-option" data-color="#8b5cf6" style="background: #8b5cf6;"></div>
+            <div class="color-option" data-color="#06b6d4" style="background: #06b6d4;"></div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Preview</h3>
+          <div class="preview-area">
+            <div class="preview-card">
+              <div class="preview-header">
+                <div class="preview-title">Sample Note</div>
+                <div class="preview-date">Just now</div>
+              </div>
+              <div class="preview-content">
+                This is how your notes will look with the current appearance settings.
+                You can see the font size, colors, and spacing in action.
+              </div>
+              <div class="preview-tags">
+                <span class="preview-tag">sample</span>
+                <span class="preview-tag">preview</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Editor Panel -->
+      <section id="editor" class="settings-panel" role="region" aria-labelledby="editor-title">
+        <div class="panel-header">
+          <h2 id="editor-title" class="panel-title">Editor</h2>
+          <p class="panel-subtitle">Configure your writing experience</p>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Auto-save</h3>
+          <div class="setting-row toggle-row">
+            <div class="setting-info">
+              <label for="autosaveToggle" class="setting-label">Enable Auto-save</label>
+              <p class="setting-description">Automatically save changes while you type</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="autosaveToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <label for="autosaveInterval" class="setting-label">
+              <span>Auto-save Interval</span>
+              <span id="autosaveIntervalValue" class="setting-value">5 seconds</span>
+            </label>
+            <input type="range" id="autosaveInterval" min="1" max="30" step="1" value="5" class="slider">
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Writing Experience</h3>
+          <div class="setting-row toggle-row">
+            <div class="setting-info">
+              <label for="richtextToggle" class="setting-label">Rich Text Editor</label>
+              <p class="setting-description">Enable formatting toolbar and rich text features</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="richtextToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row toggle-row">
+            <div class="setting-info">
+              <label for="spellcheckToggle" class="setting-label">Spell Check</label>
+              <p class="setting-description">Highlight spelling errors as you type</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="spellcheckToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row toggle-row">
+            <div class="setting-info">
+              <label for="wordcountToggle" class="setting-label">Live Word Count</label>
+              <p class="setting-description">Show real-time word and character count</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="wordcountToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Default Formatting</h3>
+          <div class="setting-row">
+            <label for="defaultFont" class="setting-label">Default Font</label>
+            <select id="defaultFont" class="setting-select">
+              <option value="inter">Inter</option>
+              <option value="system">System Font</option>
+              <option value="georgia">Georgia</option>
+              <option value="times">Times New Roman</option>
+              <option value="arial">Arial</option>
+              <option value="monospace">Monospace</option>
+            </select>
+          </div>
+
+          <div class="setting-row">
+            <label for="fontSize" class="setting-label">
+              <span>Default Font Size</span>
+              <span id="fontSizeValue" class="setting-value">16px</span>
+            </label>
+            <input type="range" id="fontSize" min="12" max="24" step="1" value="16" class="slider">
+          </div>
+
+          <div class="setting-row">
+            <label for="lineHeight" class="setting-label">
+              <span>Line Height</span>
+              <span id="lineHeightValue" class="setting-value">1.6</span>
+            </label>
+            <input type="range" id="lineHeight" min="1.2" max="2.0" step="0.1" value="1.6" class="slider">
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Editor Preview</h3>
+          <div class="editor-preview">
+            <div class="preview-toolbar">
+              <button class="toolbar-btn">B</button>
+              <button class="toolbar-btn">I</button>
+              <button class="toolbar-btn">U</button>
+              <button class="toolbar-btn">🔗</button>
+              <button class="toolbar-btn">📷</button>
+              <button class="toolbar-btn">≡</button>
+            </div>
+            <div class="preview-editor">
+              <div class="preview-cursor"></div>
+              <div class="preview-text">
+                This is a preview of how your editor will look and behave.
+                You can see the font, spacing, and toolbar in action here.
+              </div>
+              <div class="preview-stats">
+                <span class="word-count">Words: 24</span>
+                <span class="char-count">Characters: 124</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Behavior Panel -->
+      <section id="behavior" class="settings-panel" role="region" aria-labelledby="behavior-title">
+        <div class="panel-header">
+          <h2 id="behavior-title" class="panel-title">Behavior</h2>
+          <p class="panel-subtitle">Configure how Scribbl behaves</p>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Startup</h3>
+          <div class="setting-row">
+            <label for="startupAction" class="setting-label">On App Start</label>
+            <select id="startupAction" class="setting-select">
+              <option value="last">Restore Last Session</option>
+              <option value="new">Create New Note</option>
+              <option value="blank">Show Blank Canvas</option>
+              <option value="dashboard">Open Dashboard</option>
+            </select>
+          </div>
+
+          <div class="setting-row toggle-row">
+            <div class="setting-info">
+              <label for="recentFilesToggle" class="setting-label">Show Recent Files</label>
+              <p class="setting-description">Display recently opened notes on startup</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="recentFilesToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Notifications</h3>
+          <div class="setting-row toggle-row">
+            <div class="setting-info">
+              <label for="saveNotifyToggle" class="setting-label">Save Notifications</label>
+              <p class="setting-description">Show notifications when notes are saved</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="saveNotifyToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row toggle-row">
+            <div class="setting-info">
+              <label for="backupNotifyToggle" class="setting-label">Backup Reminders</label>
+              <p class="setting-description">Remind to backup your notes periodically</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="backupNotifyToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Performance</h3>
+          <div class="setting-row toggle-row">
+            <div class="setting-info">
+              <label for="smoothScrollToggle" class="setting-label">Smooth Scrolling</label>
+              <p class="setting-description">Enable smooth scrolling animations</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="smoothScrollToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row toggle-row">
+            <div class="setting-info">
+              <label for="animationsToggle" class="setting-label">UI Animations</label>
+              <p class="setting-description">Enable interface animations and transitions</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="animationsToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Quick Actions</h3>
+          <div class="quick-actions-grid">
+            <div class="quick-action-item">
+              <div class="action-icon">⌘N</div>
+              <div class="action-info">
+                <div class="action-title">New Note</div>
+                <div class="action-desc">Create a new note</div>
+              </div>
+            </div>
+            <div class="quick-action-item">
+              <div class="action-icon">⌘K</div>
+              <div class="action-info">
+                <div class="action-title">Command Palette</div>
+                <div class="action-desc">Open quick actions</div>
+              </div>
+            </div>
+            <div class="quick-action-item">
+              <div class="action-icon">⌘S</div>
+              <div class="action-info">
+                <div class="action-title">Save Note</div>
+                <div class="action-desc">Save current note</div>
+              </div>
+            </div>
+            <div class="quick-action-item">
+              <div class="action-icon">⌘F</div>
+              <div class="action-info">
+                <div class="action-title">Search</div>
+                <div class="action-desc">Find in notes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="feedbackToast" class="toast hidden">
+    <div class="toast-content">
+      <span class="toast-icon"></span>
+      <span class="toast-message" id="toastMessage"></span>
+    </div>
+  </div>
+  <script src="static/js/dataManager.js"></script>
+  <script src="static/js/settings.js"></script>
+</body>
+</html>

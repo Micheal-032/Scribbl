@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scribbl - Your Secure Note-Taking App</title>
+  <link rel="stylesheet" href="static/css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <!-- Enhanced Animated Background -->
+  <div class="animated-bg">
+    <div class="particles-container" id="particles"></div>
+    <div class="liquid-gradient"></div>
+    <div class="animated-grid"></div>
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="floating-note">📝</div>
+    <div class="floating-note">🔒</div>
+    <div class="floating-note">📊</div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="custom-cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">✍️</div>
+      <h2 class="logo-text">Scribbl</h2>
+    </div>
+
+    <nav class="nav-links">
+      <button class="nav-item active" data-section="home">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-text">Home</span>
+        <div class="nav-ripple"></div>
+      </button>
+      <button class="nav-item" onclick="window.location.href='notes.html'">
+        <span class="nav-icon">📝</span>
+        <span class="nav-text">Notes</span>
+        <div class="nav-ripple"></div>
+      </button>
+      <button class="nav-item" onclick="window.location.href='secure-notes.html'">
+        <span class="nav-icon">🔒</span>
+        <span class="nav-text">Secure Notes</span>
+        <div class="nav-ripple"></div>
+      </button>
+      <button class="nav-item" onclick="window.location.href='progress.html'">
+        <span class="nav-icon">📈</span>
+        <span class="nav-text">Progress</span>
+        <div class="nav-ripple"></div>
+      </button>
+      <button class="nav-item" onclick="window.location.href='history.html'">
+        <span class="nav-icon">📜</span>
+        <span class="nav-text">History</span>
+        <div class="nav-ripple"></div>
+      </button>
+      <button class="nav-item" onclick="window.location.href='settings.html'">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-text">Settings</span>
+        <div class="nav-ripple"></div>
+      </button>
+    </nav>
+
+    <div class="user-section">
+      <div class="user-info">
+        <div class="user-avatar">
+          <div class="avatar-glow"></div>
+          👤
+        </div>
+        <span class="username" id="username">User</span>
+      </div>
+      <button id="logoutBtn" class="logout-btn">
+        <span class="nav-icon">🚪</span>
+        <span class="nav-text">Logout</span>
+        <div class="button-ripple"></div>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="content">
+    <!-- Home Section -->
+    <section id="home" class="section active">
+      <!-- Hero Section -->
+      <div class="hero-section">
+        <div class="hero-content">
+          <div class="hero-text">
+            <h1 class="hero-title">
+              <span class="title-word title-word-1">Welcome</span>
+              <span class="title-word title-word-2">to</span>
+              <span class="gradient-text title-word title-word-3">Scribbl</span>
+            </h1>
+            <p class="hero-subtitle">Your secure, private, and powerful note-taking companion</p>
+            
+            <div class="hero-stats">
+              <div class="stat-card" data-tilt>
+                <div class="stat-glow"></div>
+                <div class="stat-number" id="totalNotes">0</div>
+                <div class="stat-label">Total Notes</div>
+                <div class="stat-progress"></div>
+              </div>
+              <div class="stat-card" data-tilt>
+                <div class="stat-glow"></div>
+                <div class="stat-number" id="secureNotes">0</div>
+                <div class="stat-label">Secure Notes</div>
+                <div class="stat-progress"></div>
+              </div>
+              <div class="stat-card" data-tilt>
+                <div class="stat-glow"></div>
+                <div class="stat-number" id="streakDays">0</div>
+                <div class="stat-label">Day Streak</div>
+                <div class="stat-progress"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-graphic">
+          <div class="floating-card card-1" data-depth="0.2">
+            <div class="card-glow"></div>
+            <div class="card-icon">📝</div>
+            <h3>Quick Notes</h3>
+            <p>Capture ideas instantly</p>
+            <div class="card-shine"></div>
+          </div>
+          <div class="floating-card card-2" data-depth="0.4">
+            <div class="card-glow"></div>
+            <div class="card-icon">🔒</div>
+            <h3>Secure Storage</h3>
+            <p>Military-grade encryption</p>
+            <div class="card-shine"></div>
+          </div>
+          <div class="floating-card card-3" data-depth="0.3">
+            <div class="card-glow"></div>
+            <div class="card-icon">📊</div>
+            <h3>Smart Analytics</h3>
+            <p>Track your progress</p>
+            <div class="card-shine"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="features-section">
+        <h2 class="section-title">
+          <span class="title-underline">How to Use Scribbl</span>
+        </h2>
+        
+        <div class="features-grid">
+          <div class="feature-card" data-aos="fade-up">
+            <div class="feature-glow"></div>
+            <div class="feature-number">01</div>
+            <div class="feature-icon">📝</div>
+            <h3>Create Notes</h3>
+            <p>Click the + button or navigate to Notes to start capturing your thoughts, ideas, and important information.</p>
+            <div class="feature-tip">
+              <strong>Pro Tip:</strong> Use tags to organize your notes efficiently.
+            </div>
+            <div class="feature-shine"></div>
+          </div>
+
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="feature-glow"></div>
+            <div class="feature-number">02</div>
+            <div class="feature-icon">🔒</div>
+            <h3>Secure Sensitive Notes</h3>
+            <p>Mark notes as secure to encrypt them with AES-256 encryption. Only accessible with your password.</p>
+            <div class="feature-tip">
+              <strong>Security:</strong> Your password never leaves your device.
+            </div>
+            <div class="feature-shine"></div>
+          </div>
+
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="feature-glow"></div>
+            <div class="feature-number">03</div>
+            <div class="feature-icon">📊</div>
+            <h3>Track Progress</h3>
+            <p>Monitor your writing habits, word counts, and productivity trends with beautiful charts and analytics.</p>
+            <div class="feature-tip">
+              <strong>Insight:</strong> Maintain streaks to build better habits.
+            </div>
+            <div class="feature-shine"></div>
+          </div>
+
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="feature-glow"></div>
+            <div class="feature-number">04</div>
+            <div class="feature-icon">🔍</div>
+            <h3>Smart Search</h3>
+            <p>Find any note instantly with our powerful search functionality. Search by title, content, or tags.</p>
+            <div class="feature-tip">
+              <strong>Quick Access:</strong> Use Ctrl+K to focus search instantly.
+            </div>
+            <div class="feature-shine"></div>
+          </div>
+
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+            <div class="feature-glow"></div>
+            <div class="feature-number">05</div>
+            <div class="feature-icon">🕒</div>
+            <h3>Version History</h3>
+            <p>Never lose your work. Scribbl automatically saves versions and lets you restore previous states.</p>
+            <div class="feature-tip">
+              <strong>Auto-save:</strong> Changes are saved automatically every few seconds.
+            </div>
+            <div class="feature-shine"></div>
+          </div>
+
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+            <div class="feature-glow"></div>
+            <div class="feature-number">06</div>
+            <div class="feature-icon">⚡</div>
+            <h3>Quick Actions</h3>
+            <p>Use keyboard shortcuts for faster navigation and note management throughout the application.</p>
+            <div class="feature-tip">
+              <strong>Shortcut:</strong> Press ? to see all available shortcuts.
+            </div>
+            <div class="feature-shine"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Start Section -->
+      <div class="quick-start-section">
+        <h2 class="section-title">
+          <span class="title-underline">Get Started Quickly</span>
+        </h2>
+        <div class="quick-actions">
+          <button class="quick-action-btn magnetic" onclick="window.location.href='notes.html'">
+            <span class="action-glow"></span>
+            <span class="action-icon">📝</span>
+            <span class="action-text">Create First Note</span>
+            <div class="button-ripple"></div>
+          </button>
+          <button class="quick-action-btn secondary magnetic" onclick="window.location.href='secure-notes.html'">
+            <span class="action-glow"></span>
+            <span class="action-icon">🔒</span>
+            <span class="action-text">Make Secure Note</span>
+            <div class="button-ripple"></div>
+          </button>
+          <button class="quick-action-btn secondary magnetic" onclick="window.location.href='progress.html'">
+            <span class="action-glow"></span>
+            <span class="action-icon">📊</span>
+            <span class="action-text">View Analytics</span>
+            <div class="button-ripple"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="recent-activity">
+        <h2 class="section-title">
+          <span class="title-underline">Recent Activity</span>
+        </h2>
+        <div class="activity-list" id="activityList">
+          <!-- Dynamic content will be loaded here -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Enhanced Quick Note Modal -->
+  <div id="quickNoteModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="modal-content" data-tilt>
+        <div class="modal-glow"></div>
+        <h2 class="modal-title">Quick Note</h2>
+        <div class="input-group">
+          <input type="text" id="quickNoteTitle" placeholder=" " />
+          <label for="quickNoteTitle">Note Title</label>
+          <div class="input-underline"></div>
+        </div>
+        <div class="input-group">
+          <textarea id="quickNoteBody" placeholder=" "></textarea>
+          <label for="quickNoteBody">What's on your mind?</label>
+          <div class="input-underline"></div>
+        </div>
+        <div class="modal-actions">
+          <button id="saveQuickNote" class="primary-btn magnetic">
+            <span class="btn-glow"></span>
+            Save Note
+            <div class="button-ripple"></div>
+          </button>
+          <button id="closeQuickNote" class="secondary-btn magnetic">
+            Cancel
+            <div class="button-ripple"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Floating Action Button -->
+  <button id="quickNoteBtn" class="fab magnetic" title="Create quick note">
+    <span class="fab-glow"></span>
+    <span class="fab-icon">+</span>
+    <div class="fab-ripple"></div>
+  </button>
+
+  <!-- Scroll Progress Indicator -->
+  <div class="scroll-progress">
+    <div class="scroll-bar"></div>
+  </div>
+
+  <!-- Theme Toggle -->
+  <div class="theme-toggle">
+    <input type="checkbox" id="themeSwitch" class="theme-checkbox" />
+    <label for="themeSwitch" class="theme-label">
+      <div class="theme-handle"></div>
+      <div class="theme-icons">
+        <span class="theme-icon sun">☀️</span>
+        <span class="theme-icon moon">🌙</span>
+      </div>
+    </label>
+  </div>
+  <script src="static/js/dataManager.js"></script>
+  <script src="static/js/dashboard.js"></script>
+</body>
+</html>   
