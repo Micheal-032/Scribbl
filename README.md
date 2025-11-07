@@ -3,6 +3,8 @@
 Scribbl is a privacy-focused, local-first note-taking application that runs entirely in your browser.
 Your data never leaves your device — everything is encrypted, stored locally, and secured with end-to-end encryption.
 
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+
 👥 Team Members
 
 Project Lead: Micheal Nelson J
@@ -10,12 +12,14 @@ Teammate 1: Nivya Nivashini G K
 Teammate 2: Nishanth S
 Teammate 3: Nithersana G
 Teammate 4: Pavithra V
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 📘 Project Overview
 
 Scribbl is designed to bring security, simplicity, and productivity together.
 It empowers users to take, organize, and analyze their notes — without compromising privacy.
 All notes, analytics, and settings are stored locally on your device using AES-256 encryption, ensuring full data ownership.
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 📝 Core Modules
 1️⃣ Notes Module
@@ -29,6 +33,7 @@ Tag-based categorization for smart organization
 Quick note creation from the dashboard
 
 Full-text search functionality for instant access
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 2️⃣ Secure Notes Module 🔒
 
@@ -41,6 +46,7 @@ Password-protected access
 Local-only encryption keys (no cloud involvement)
 
 Secure note isolation for privacy
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 3️⃣ Progress Analytics 📊
 
@@ -53,6 +59,7 @@ Note statistics and insights
 Productivity charts and visual graphs
 
 Achievement badges for motivation
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 4️⃣ History & Timeline 📜
 
@@ -65,6 +72,7 @@ Note creation and edit history
 User action tracking
 
 Version history for each note
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 ⚙️ Setup & Installation
 🧩 Prerequisites
@@ -87,6 +95,7 @@ python app.py
 👉 http://localhost:5000
 
 5️⃣ Create your account and start using Scribbl securely!
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 🧠 Usage Guide
 
@@ -99,6 +108,7 @@ Mark sensitive notes as “Secure” to enable encryption
 Track your productivity using built-in analytics
 
 Export your data in multiple formats when needed
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 🔐 Security Features
 
@@ -109,6 +119,7 @@ End-to-end encryption: Ensures note confidentiality
 Automatic session locking: Protects inactive sessions
 
 Client-side cryptography: Encryption handled fully in-browser
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 🧰 Technology Stack
 
@@ -116,7 +127,7 @@ Backend: Python Flask
 Frontend: HTML5, CSS3, JavaScript
 Database: IndexedDB (Browser-based local storage)
 Encryption: Web Crypto API
-
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
 ✨ Why Choose Scribbl?
 
 ✅ 100% local and private — your data never leaves your device
