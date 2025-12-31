@@ -5,15 +5,6 @@ Your data never leaves your device — everything is encrypted, stored locally, 
 
 ____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
-👥 Team Members
-
-Project Lead: Micheal Nelson J
-Teammate 1: Nivya Nivashini G K
-Teammate 2: Nishanth S
-Teammate 3: Nithersana G
-Teammate 4: Pavithra V
-____________________________________________________________________________________________________________________________________________________________________________________________________________________
-
 📘 Project Overview
 
 Scribbl is designed to bring security, simplicity, and productivity together.
